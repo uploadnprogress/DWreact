@@ -1,0 +1,22 @@
+/* Unique styles for the How It Works section */
+
+#how-it-works {
+    background-color: #eef5ff; /* A very light blue from your palette */
+    padding-top: 50px;
+    padding-bottom: 50px;
+}
+
+#how-it-works .section-title {
+    color: var(--primary-blue);
+}
+
+#how-it-works .service-box {
+    background-color: #ffffff; /* Ensure boxes are white against the new background */
+    border: 1px solid var(--border-color);
+    border-left: 5px solid var(--secondary-blue); /* Adds a blue accent on the left */
+    box-shadow: var(--shadow-soft);
+}
+
+#how-it-works .service-box h3 {
+    color: var(--primary-blue);
+}
