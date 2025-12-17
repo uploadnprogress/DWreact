@@ -1,25 +1,35 @@
 import React from 'react';
 
-function HowItWorks() {
+const HowItWorks = () => {
   return (
-    <section id="how-it-works" className="content-section">
-      <h2 className="section-title">Our Simple, Stress-Free Process</h2>
-      <div className="service-boxes">
-        <div className="service-box">
-          <h3>1. Tell Us About Your Project</h3>
-          <p>Submit your project details through our secure online form. Provide as much information as you can so we can find the perfect match.</p>
+    <section className="how-it-works-section" id="how-it-works">
+      <div className="container">
+        <h2 className="section-title">The DoneWright Advantage</h2>
+        <p className="section-subtitle">Better for Clients. Fairer for Pros. Vetted for Peace of Mind.</p>
+        
+        <div className="steps-grid">
+          <div className="step-card">
+            <h3>1. Vetted Professionals Only</h3>
+            <p>Unlike national gig apps, we don't sell leads to the highest bidder. Every contractor is background-checked, insured, and manually verified by our team.</p>
+          </div>
+
+          <div className="step-card">
+            <h3>2. The "5/5" Pricing Model</h3>
+            <p>We've disrupted the market by ditching high lead fees. We charge a flat 5% to the client and 5% to the contractor. This keeps costs low and ensures your pro is paid what they deserve.</p>
+          </div>
+
+          <div className="step-card">
+            <h3>3. Specialized Partnerships</h3>
+            <p>We partner with Seattle moving companies and office managers to handle the 'mundane' tasks—assembly, mounting, and repairs—so they can focus on the heavy lifting.</p>
+          </div>
         </div>
-        <div className="service-box">
-          <h3>2. We Match You With a Pro</h3>
-          <p>Our team reviews your needs and connects you with a qualified, vetted professional from our nationwide network who is available to help.</p>
-        </div>
-        <div className="service-box">
-          <h3>3. The Work Gets DoneWright</h3>
-          <p>The contractor will contact you to finalize details and get the job done. We're here to ensure a smooth process from start to finish.</p>
+        
+        <div className="cta-container">
+          <p>Ready to experience the difference? No upfront lead fees, ever.</p>
         </div>
       </div>
     </section>
   );
-}
+};
 
 export default HowItWorks;
