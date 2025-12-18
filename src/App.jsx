@@ -1,25 +1,19 @@
 import React from 'react';
-import { Outlet } from 'react-router-dom'; // 1. Import Outlet
-
-// Import your components
+import { Outlet } from 'react-router-dom';
 import Header from './components/Header';
 import Footer from './components/Footer';
-import Chatbot from './components/Chatbot';
-
-// Import your CSS
-import './styles.css';
-import './chatbot.css';
+import Chatbot from './components/Chatbot'; // Import the new component
 
 function App() {
   return (
-    <>
+    <div className="app-wrapper">
       <Header />
       <main>
-        <Outlet /> {/* 2. Outlet is the placeholder for our page content */}
+        <Outlet />
       </main>
+      <Chatbot /> {/* Added here to persist across all pages */}
       <Footer />
-      <Chatbot />
-    </>
+    </div>
   );
 }
 

@@ -1,58 +1,107 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
-function Chatbot() {
-  const [isOpen, setIsOpen] = useState(false);
-  const [messages, setMessages] = useState([
-    { id: 1, text: "Hi there! How can I help you with your project today?", sender: 'bot' }
-  ]);
-  const [inputValue, setInputValue] = useState('');
+const Chatbot = () => {
+    const [isOpen, setIsOpen] = useState(false);
+    const [messages, setMessages] = useState([]); // { role: 'user' | 'assistant', content: string }
+    const [userInput, setUserInput] = useState('');
+    const [isTyping, setIsTyping] = useState(false);
+    const chatboxRef = useRef(null);
 
-  const toggleChat = () => setIsOpen(!isOpen);
+    const MAX_HISTORY_LENGTH = 8;
 
-  const handleInputChange = (e) => setInputValue(e.target.value);
+    // Scroll to bottom whenever messages change
+    useEffect(() => {
+        if (chatboxRef.current) {
+            chatboxRef.current.scrollTop = chatboxRef.current.scrollHeight;
+        }
+    }, [messages, isTyping]);
 
-  const handleSendMessage = (e) => {
-    e.preventDefault();
-    if (inputValue.trim() === '') return;
+    const toggleChat = () => {
+        setIsOpen(!isOpen);
+        if (!isOpen && messages.length === 0) {
+            setMessages([{ role: 'assistant', content: 'Hi! I’m the DoneWright Assistant. How can I help you today?' }]);
+        }
+    };
 
-    const newUserMessage = { id: Date.now(), text: inputValue, sender: 'user' };
-    const botReply = { id: Date.now() + 1, text: "Thanks for your message! A specialist will review this and get back to you shortly.", sender: 'bot' };
-    
-    setMessages(prev => [...prev, newUserMessage, botReply]);
-    setInputValue('');
-  };
+    const handleSend = async () => {
+        if (!userInput.trim()) return;
 
-  return (
-    <div className="chatbot-container">
-      {isOpen && (
-        <div className="chat-window">
-          <div className="chat-header">
-            <h3>DoneWright Assistant</h3>
-            <button onClick={toggleChat} className="close-chat-btn">&times;</button>
-          </div>
-          <div className="message-list">
-            {messages.map((message) => (
-              <div key={message.id} className={`message ${message.sender === 'user' ? 'user-message' : 'bot-message'}`}>
-                {message.text}
-              </div>
-            ))}
-          </div>
-          <form className="chat-input-form" onSubmit={handleSendMessage}>
-            <input
-              type="text"
-              value={inputValue}
-              onChange={handleInputChange}
-              placeholder="Type your message..."
-            />
-            <button type="submit">Send</button>
-          </form>
-        </div>
-      )}
-      <button onClick={toggleChat} className="chat-widget-button" aria-label="Open chat">
-        💬
-      </button>
-    </div>
-  );
-}
+        const newUserMessage = { role: 'user', content: userInput };
+        const updatedHistory = [...messages, newUserMessage];
+        
+        setMessages(updatedHistory);
+        setUserInput('');
+        setIsTyping(true);
+
+        try {
+            // Slicing history to match your previous MAX_HISTORY_LENGTH logic
+            const historyToSend = updatedHistory.slice(-MAX_HISTORY_LENGTH);
+
+            const response = await fetch('/api/chat', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    message: userInput,
+                    history: historyToSend
+                })
+            });
+
+            const data = await response.json();
+            setIsTyping(false);
+
+            if (response.ok) {
+                setMessages(prev => [...prev, { role: 'assistant', content: data.reply }]);
+            } else {
+                setMessages(prev => [...prev, { role: 'assistant', content: 'Sorry, connection error.' }]);
+            }
+        } catch (error) {
+            setIsTyping(false);
+            setMessages(prev => [...prev, { role: 'assistant', content: 'Oops! Network error.' }]);
+        }
+    };
+
+    return (
+        <>
+            {/* Chat Toggle Button */}
+            {!isOpen && (
+                <button id="chat-open-button" onClick={toggleChat} className="chat-fab">
+                    💬
+                </button>
+            )}
+
+            {/* Chat Container */}
+            {isOpen && (
+                <div id="chat-container" className="chat-container">
+                    <div className="chat-header">
+                        <span>DoneWright Assistant</span>
+                        <button onClick={toggleChat}>—</button>
+                    </div>
+                    <div id="chatbox" ref={chatboxRef} className="chatbox">
+                        {messages.map((msg, i) => (
+                            <div key={i} className={`message-bubble ${msg.role === 'assistant' ? 'bot-bubble' : 'user-bubble'}`}>
+                                <span>{msg.content}</span>
+                            </div>
+                        ))}
+                        {isTyping && (
+                            <div className="message-bubble bot-bubble">
+                                <span>DoneWright Bot is typing...</span>
+                            </div>
+                        )}
+                    </div>
+                    <div className="chat-input-area">
+                        <input 
+                            type="text" 
+                            value={userInput} 
+                            onChange={(e) => setUserInput(e.target.value)}
+                            onKeyPress={(e) => e.key === 'Enter' && handleSend()}
+                            placeholder="Type here..."
+                        />
+                        <button onClick={handleSend}>Send</button>
+                    </div>
+                </div>
+            )}
+        </>
+    );
+};
 
 export default Chatbot;

@@ -14,9 +14,9 @@ function HomePage() {
 
       <section className="hero">
         <div className="container">
-          {/* H1 for Brand Dominance */}
+          {/* H1 is now the Brand - Dominant size */}
           <h1>DoneWright Services</h1>
-          {/* H2 for Tagline */}
+          {/* H2 is the Tagline - Supporting size */}
           <h2>We Coordinate. They Deliver.</h2>
           <p>Seattle's premier network of vetted independent contractors.</p>
         </div>
