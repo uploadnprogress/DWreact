@@ -1,52 +1,50 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
-import { Link } from 'react-router-dom'; // Required for the buttons to work
-import Hero from '../components/Hero';
-import HowItWorks from '../components/HowItWorks';
-import Services from '../components/Services';
 import JoinNetwork from '../components/JoinNetwork';
 
 function HomePage() {
+  const navigate = useNavigate();
+
+  // This handles the "action" when the tile is clicked
+  const handleTileClick = (type) => {
+    navigate('/start-project', { state: { type } });
+  };
+
   return (
     <>
       <Helmet>
-        <title>Vetted Home & Business Contractors in Seattle | DoneWright Services</title>
-        <meta name="description" content="DoneWright Services connects Seattle homeowners and businesses with vetted, reliable contractors. Get stress-free coordination for your next project. Request a quote!" />
+        <title>DoneWright Services | Vetted Contractor Network Seattle</title>
       </Helmet>
 
-      <Hero />
-      
-      {/* If your tiles are part of the Services component, 
-          you should apply the Link logic inside src/components/Services.jsx.
-          If you are adding them directly here, use the code below: 
-      */}
-      
-      <section className="category-section">
-        <div className="container">
-          <div className="services-grid">
-            {/* Home Tile */}
-            <div className="category-card">
-              <h3>Residential</h3>
+      <section className="content-section">
+        <h1 className="section-title">Professional Services for Every Need</h1>
+        <p className="intro">We Coordinate. They Deliver. Select a service to begin.</p>
+        
+        {/* Using your styles.css classes: service-cards and card */}
+        <div className="service-cards">
+          
+          {/* Residential Tile */}
+          <div className="card" onClick={() => handleTileClick('home')} style={{cursor: 'pointer'}}>
+            <div className="card-content">
+              <h4>Residential</h4>
               <p>Assembly, mounting, and home repairs.</p>
-              <Link to="/start-project" state={{ type: 'home' }} className="btn">
-                Get Started
-              </Link>
-            </div>
-
-            {/* Business Tile */}
-            <div className="category-card">
-              <h3>Commercial</h3>
-              <p>Office setups, retail mounting, and corporate repairs.</p>
-              <Link to="/start-project" state={{ type: 'business' }} className="btn">
-                Get Started
-              </Link>
+              <span className="btn" style={{marginTop: '10px'}}>Get Started</span>
             </div>
           </div>
+
+          {/* Business Tile */}
+          <div className="card" onClick={() => handleTileClick('business')} style={{cursor: 'pointer'}}>
+            <div className="card-content">
+              <h4>Commercial</h4>
+              <p>Office setups and retail maintenance.</p>
+              <span className="btn" style={{marginTop: '10px'}}>Get Started</span>
+            </div>
+          </div>
+
         </div>
       </section>
 
-      <HowItWorks />
-      <Services />
       <JoinNetwork />
     </>
   );

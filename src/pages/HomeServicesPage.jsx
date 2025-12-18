@@ -6,32 +6,26 @@ function HomeServicesPage() {
   return (
     <>
       <Helmet>
-        <title>Home Services | DoneWright Services</title>
-        <meta name="description" content="Vetted residential services in Seattle including furniture assembly, mounting, and home repairs." />
+        <title>Residential Services | DoneWright Services</title>
       </Helmet>
       
       <div className="content-page-section">
         <h1 className="section-title">Home Services</h1>
-        <p className="intro" style={{ textAlign: 'center' }}>
-          Professional, vetted support for all your residential needs.
-        </p>
-
-        <div className="services-grid">
-          <div className="service-card">
-            <h4>Residential Assembly</h4>
-            <p>From IKEA furniture to complex outdoor sets, we get it done right.</p>
-            {/* Direct link to Home Form */}
+        <div className="service-table" style={{ margin: '0 auto', maxWidth: '600px' }}>
+          <h3>Residential Coordination</h3>
+          <p style={{marginBottom: '20px'}}>
+            Seattle's most trusted path to furniture assembly, TV mounting, and home repairs. 
+            All pros are vetted, insured, and background-checked.
+          </p>
+          <ul style={{marginBottom: '30px'}}>
+            <li>Expert Furniture Assembly</li>
+            <li>Precision TV & Wall Mounting</li>
+            <li>General Handyman Repairs</li>
+            <li>In-Home Consultation</li>
+          </ul>
+          <div className="form-button-wrapper">
             <Link to="/start-project" state={{ type: 'home' }} className="btn">
-              Get Started
-            </Link>
-          </div>
-
-          <div className="service-card">
-            <h4>TV & Art Mounting</h4>
-            <p>Secure, level, and professional mounting for your home entertainment.</p>
-            {/* Direct link to Home Form */}
-            <Link to="/start-project" state={{ type: 'home' }} className="btn">
-              Get Started
+              Start Home Project
             </Link>
           </div>
         </div>

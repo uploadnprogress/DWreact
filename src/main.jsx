@@ -17,7 +17,8 @@ import PrivacyPolicyPage from './pages/PrivacyPolicyPage.jsx';
 import TermsOfServicePage from './pages/TermsOfServicePage.jsx';
 
 // Import your global styles
-import './index.css';
+import './styles.css';
+import './chatbot.css';
 
 // Define all your application routes
 const router = createBrowserRouter([
