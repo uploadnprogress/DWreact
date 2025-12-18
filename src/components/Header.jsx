@@ -9,8 +9,13 @@ const Header = () => {
       <div className="header-content">
         <div className="logo-area">
           <Link to="/" onClick={() => setIsNavActive(false)}>
-            {/* The Logo is the Home Button */}
-            <h1 style={{color: 'white', margin: 0, fontSize: '1.5rem'}}>DoneWright Services</h1>
+            {/* Logo implementation replacing text */}
+            <img 
+              src="/assets/dws-logo.png" 
+              alt="DoneWright Services Logo" 
+              id="site-logo"
+              style={{ maxHeight: '50px', cursor: 'pointer' }} 
+            />
           </Link>
         </div>
 
