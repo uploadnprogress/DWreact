@@ -12,14 +12,15 @@ function HomePage() {
         <title>DoneWright Services | Seattle Vetted Contractor Network</title>
       </Helmet>
 
-      {/* Hero Section */}
+      {/* Hero Section - Tags Swapped for Correct Sizing */}
       <section className="hero">
         <div className="container">
-          {/* Brand Name Text added here */}
-          <h3 style={{ color: 'white', fontWeight: 'bold', marginBottom: '10px', textTransform: 'uppercase', letterSpacing: '2px' }}>
-            DoneWright Services
-          </h3>
-          <h2>We Coordinate. They Deliver.</h2>
+          {/* h2 is the larger font size in your CSS */}
+          <h2>DoneWright Services</h2>
+          
+          {/* h3 is the smaller/supporting font size in your CSS */}
+          <h3>We Coordinate. They Deliver.</h3>
+          
           <p>Seattle's premier network of vetted independent contractors.</p>
         </div>
       </section>
@@ -28,16 +29,16 @@ function HomePage() {
       <section className="content-section">
         <div className="container">
           <h2 className="section-title">Professional Services for Every Need</h2>
-          <p className="intro">Select a service to begin.</p>
+          <p className="intro" style={{ textAlign: 'center' }}>Select a service category to begin.</p>
           
           <div className="service-cards">
-            {/* Residential Tile - Image path updated to local folder */}
+            {/* Residential Tile */}
             <div 
               className="card" 
               onClick={() => navigate('/start-project', { state: { type: 'home' } })} 
               style={{
                 cursor: 'pointer',
-                backgroundImage: 'linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url("/images/home-services.jpg")',
+                backgroundImage: 'linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url("/images/home-services.jpg")',
                 backgroundSize: 'cover',
                 backgroundPosition: 'center'
               }}
@@ -48,13 +49,13 @@ function HomePage() {
               </div>
             </div>
 
-            {/* Commercial Tile */}
+            {/* Business Tile */}
             <div 
               className="card" 
               onClick={() => navigate('/start-project', { state: { type: 'business' } })} 
               style={{
                 cursor: 'pointer',
-                backgroundImage: 'linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url("https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=800&q=80")',
+                backgroundImage: 'linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url("https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=800&q=80")',
                 backgroundSize: 'cover',
                 backgroundPosition: 'center'
               }}
