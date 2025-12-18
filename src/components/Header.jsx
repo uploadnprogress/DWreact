@@ -11,7 +11,7 @@ const Header = () => {
           <Link to="/" onClick={() => setIsNavActive(false)}>
             {/* Logo implementation replacing text */}
             <img 
-              src="/assets/dws-logo.png" 
+              src="/images/dws-logo.png" 
               alt="DoneWright Services Logo" 
               id="site-logo"
               style={{ maxHeight: '50px', cursor: 'pointer' }} 

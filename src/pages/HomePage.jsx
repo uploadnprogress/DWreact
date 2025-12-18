@@ -36,7 +36,7 @@ function HomePage() {
               onClick={() => navigate('/start-project', { state: { type: 'home' } })} 
               style={{
                 cursor: 'pointer',
-                backgroundImage: 'url("/assets/home-services.jpg")',
+                backgroundImage: 'url("/images/home-services.jpg")',
                 backgroundSize: 'cover',
                 backgroundPosition: 'center'
               }}
@@ -53,7 +53,7 @@ function HomePage() {
               onClick={() => navigate('/start-project', { state: { type: 'business' } })} 
               style={{
                 cursor: 'pointer',
-                backgroundImage: 'url("https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=800&q=80")',
+                backgroundImage: 'url("/images/business-services.jpg")',
                 backgroundSize: 'cover',
                 backgroundPosition: 'center'
               }}
