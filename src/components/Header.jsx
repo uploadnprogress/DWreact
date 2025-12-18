@@ -1,53 +1,38 @@
-import React, { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 
-function Header() {
-  const [isNavActive, setIsNavActive] = useState(false);
-  const location = useLocation(); // Gets the current URL location
-
-  // This effect runs every time the URL changes
-  useEffect(() => {
-    // Close the mobile menu on navigation
-    if (isNavActive) {
-      setIsNavActive(false);
-      document.body.classList.remove('no-scroll');
-    }
-  }, [location]); // The effect depends on the location changing
-
-  const toggleNav = () => {
-    const newNavState = !isNavActive;
-    setIsNavActive(newNavState);
-    document.body.classList.toggle('no-scroll', newNavState);
-  };
+const Header = () => {
+  const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <header className="main-header">
-      <div className="header-content">
-        <div className="logo-area">
-          <Link to="/"><img src="/images/dws-logo.png" alt="DoneWright Services Logo" id="site-logo" /></Link>
-        </div>
+    <header className="header">
+      <div className="container">
+        <Link to="/" className="logo">
+          DoneWright<span>Services</span>
+        </Link>
 
-        <button
-          className="mobile-nav-toggle"
-          aria-label="Toggle Navigation Menu"
-          aria-expanded={isNavActive}
-          aria-controls="primary-navigation"
-          onClick={toggleNav}
-        >
-          <span className="hamburger-icon"></span>
-        </button>
-
-        <nav className="primary-nav-container">
-          <ul id="primary-navigation" className={isNavActive ? 'nav-active' : ''}>
-            <li><Link to="/services">Services Network</Link></li>
-            <li><Link to="/start-project">Start a Project</Link></li> {/* Consolidated Link */}
-            <li><Link to="/faq">How It Works (FAQ)</Link></li>
-            <li><Link to="/contacts">Contact Us</Link></li>
+        <nav className={`nav ${isOpen ? 'open' : ''}`}>
+          <ul>
+            <li><Link to="/">Home</Link></li>
+            {/* Fixed Links: Pointing to React Routes instead of .html files */}
+            <li><Link to="/home-services">Home Services</Link></li>
+            <li><Link to="/business-services">Business Services</Link></li>
+            <li><Link to="/faq">How It Works</Link></li>
+            <li><Link to="/contacts">Contact</Link></li>
+            <li>
+              <Link to="/start-project" className="nav-btn">Start a Project</Link>
+            </li>
           </ul>
         </nav>
+
+        <button className="menu-toggle" onClick={() => setIsOpen(!isOpen)}>
+          <span className="bar"></span>
+          <span className="bar"></span>
+          <span className="bar"></span>
+        </button>
       </div>
     </header>
   );
-}
+};
 
 export default Header;
