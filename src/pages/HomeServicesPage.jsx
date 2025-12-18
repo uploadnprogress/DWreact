@@ -6,15 +6,34 @@ function HomeServicesPage() {
   return (
     <>
       <Helmet>
-        <title>The DoneWright Difference for Home Services</title>
-        <meta name="description" content="Discover why homeowners trust DoneWright Services for vetted, reliable contractors and stress-free project coordination." />
+        <title>Home Services | DoneWright Services</title>
+        <meta name="description" content="Vetted residential services in Seattle including furniture assembly, mounting, and home repairs." />
       </Helmet>
+      
       <div className="content-page-section">
-        <h1 className="section-title">The DoneWright Difference: Home Services</h1>
-        <p>Finding the right professional for your home project can be stressful. At DoneWright Services, we eliminate the guesswork. We don't just find a contractor; we connect you with a vetted, reliable partner who is right for your specific job, ensuring quality and peace of mind from start to finish.</p>
-        {/* You can add more detailed content here */}
-        <div className="form-button-wrapper">
-            <Link to="/start-project" className="btn">Start Your Home Project</Link>
+        <h1 className="section-title">Home Services</h1>
+        <p className="intro" style={{ textAlign: 'center' }}>
+          Professional, vetted support for all your residential needs.
+        </p>
+
+        <div className="services-grid">
+          <div className="service-card">
+            <h4>Residential Assembly</h4>
+            <p>From IKEA furniture to complex outdoor sets, we get it done right.</p>
+            {/* Direct link to Home Form */}
+            <Link to="/start-project" state={{ type: 'home' }} className="btn">
+              Get Started
+            </Link>
+          </div>
+
+          <div className="service-card">
+            <h4>TV & Art Mounting</h4>
+            <p>Secure, level, and professional mounting for your home entertainment.</p>
+            {/* Direct link to Home Form */}
+            <Link to="/start-project" state={{ type: 'home' }} className="btn">
+              Get Started
+            </Link>
+          </div>
         </div>
       </div>
     </>

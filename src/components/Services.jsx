@@ -1,34 +1,72 @@
 import React from 'react';
-import { Link } from 'react-router-dom'; // Import Link
+import { Link } from 'react-router-dom';
 
-function Services() {
+const Services = () => {
   return (
-    <section id="services" className="content-section">
-      <h2 className="section-title">Connecting You With Nationwide Home & Business Expertise</h2>
-      <div className="service-cards">
-        <Link 
-          to="/home-services" 
-          className="card" 
-          style={{ backgroundImage: `url(/images/home-services.jpg)` }}
-        >
-          <div className="card-content">
-            <h4>Home Services</h4>
-            <p>From minor repairs to major renovations, find trusted pros for any home project.</p>
+    <section className="services-section" id="services">
+      <div className="container">
+        <h2 className="section-title">Professional Services for Every Need</h2>
+        <p className="section-subtitle">
+          Vetted expertise for your home or business, delivered with a transparent 5/5 fee model.
+        </p>
+
+        <div className="services-grid">
+          {/* Residential / Home Tile */}
+          <div className="service-card">
+            <div className="card-image-wrapper">
+              {/* If using an img tag, ensure descriptive alt text for SEO */}
+              <div className="service-icon-placeholder" role="img" aria-label="Home interior with assembled furniture">🏠</div>
+            </div>
+            <div className="card-content">
+              <h3>Residential Services</h3>
+              <p>
+                From furniture assembly and TV mounting to general home repairs. 
+                Get connected with Seattle's most reliable independent pros.
+              </p>
+              <ul className="service-list">
+                <li>Furniture Assembly</li>
+                <li>TV & Art Mounting</li>
+                <li>Handyman Repairs</li>
+              </ul>
+              <Link 
+                to="/start-project" 
+                state={{ type: 'home' }} 
+                className="btn"
+              >
+                Get Started
+              </Link>
+            </div>
           </div>
-        </Link>
-        <Link 
-          to="/business-services" 
-          className="card" 
-          style={{ backgroundImage: `url(/images/business-services.jpg)` }}
-        >
-          <div className="card-content">
-            <h4>Business Services</h4>
-            <p>Streamline your operations with expert consulting and specialized project support.</p>
+
+          {/* Commercial / Business Tile */}
+          <div className="service-card">
+            <div className="card-image-wrapper">
+              <div className="service-icon-placeholder" role="img" aria-label="Modern office space with workstations">🏢</div>
+            </div>
+            <div className="card-content">
+              <h3>Business Services</h3>
+              <p>
+                Specialized support for office setups, retail displays, and corporate 
+                maintenance. We partner with office managers to keep your business running.
+              </p>
+              <ul className="service-list">
+                <li>Office Furniture Setup</li>
+                <li>Retail & Gallery Mounting</li>
+                <li>Commercial Maintenance</li>
+              </ul>
+              <Link 
+                to="/start-project" 
+                state={{ type: 'business' }} 
+                className="btn"
+              >
+                Get Started
+              </Link>
+            </div>
           </div>
-        </Link>
+        </div>
       </div>
     </section>
   );
-}
+};
 
 export default Services;
