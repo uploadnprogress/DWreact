@@ -3,7 +3,7 @@ import { Helmet } from 'react-helmet-async';
 
 const JoinUsPage = () => {
   const [formData, setFormData] = useState({
-    firstName: '', lastName: '', email: '', phone: '', zip: '', city: '', state: '', specialty: ''
+    firstName: '', lastName: '', email: '', zip: '', city: '', state: ''
   });
 
   const handleZipChange = async (e) => {
@@ -28,22 +28,20 @@ const JoinUsPage = () => {
     <div className="form-section">
       <Helmet><title>Join the Network | DoneWright Services</title></Helmet>
       <div className="form-container">
-        <h1 className="section-title">Become a Service Provider</h1>
-        <p style={{ textAlign: 'center', marginBottom: '20px' }}>
-          Partner with us and keep your schedule full. No lead fees—just a fair 5% commission on completed jobs.
-        </p>
+        <h1 className="section-title">Become a Provider</h1>
         
-        <form name="provider-signup" method="POST" data-netlify="true">
+        {/* encType is REQUIRED for file uploads to work with Make.com */}
+        <form name="provider-signup" method="POST" data-netlify="true" encType="multipart/form-data">
           <input type="hidden" name="form-name" value="provider-signup" />
           
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px' }}>
             <div className="form-group">
               <label>First Name</label>
-              <input type="text" name="firstName" required onChange={(e) => setFormData({...formData, firstName: e.target.value})} />
+              <input type="text" name="firstName" required />
             </div>
             <div className="form-group">
               <label>Last Name</label>
-              <input type="text" name="lastName" required onChange={(e) => setFormData({...formData, lastName: e.target.value})} />
+              <input type="text" name="lastName" required />
             </div>
           </div>
 
@@ -59,27 +57,31 @@ const JoinUsPage = () => {
             </div>
             <div className="form-group">
               <label>City</label>
-              <input type="text" name="city" value={formData.city} readOnly style={{ backgroundColor: '#f0f0f0' }} />
+              <input type="text" name="city" value={formData.city} readOnly />
             </div>
             <div className="form-group">
               <label>State</label>
-              <input type="text" name="state" value={formData.state} readOnly style={{ backgroundColor: '#f0f0f0' }} />
+              <input type="text" name="state" value={formData.state} readOnly />
             </div>
           </div>
 
+          {/* File Upload Fields for Automation */}
           <div className="form-group">
-            <label>Primary Specialty</label>
-            <select name="specialty" required>
-              <option value="">Select your trade</option>
-              <option value="furniture-assembly">Furniture Assembly</option>
-              <option value="mounting">TV & Art Mounting</option>
-              <option value="handyman">General Handyman</option>
-              <option value="electrical">Electrical</option>
-              <option value="plumbing">Plumbing</option>
-            </select>
+            <label>Proof of Insurance (Required)</label>
+            <input type="file" name="insurance" required />
           </div>
 
-          <button type="submit" className="btn">Apply to Network</button>
+          <div className="form-group">
+            <label>Business License (Required)</label>
+            <input type="file" name="license" required />
+          </div>
+
+          <div className="form-group">
+            <label>Proof of Work (Optional)</label>
+            <input type="file" name="portfolio" multiple />
+          </div>
+
+          <button type="submit" className="btn">Submit Application</button>
         </form>
       </div>
     </div>
