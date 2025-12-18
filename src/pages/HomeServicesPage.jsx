@@ -6,22 +6,18 @@ function HomeServicesPage() {
   return (
     <>
       <Helmet>
-        <title>Residential Services | DoneWright Services</title>
+        <title>Home Services | DoneWright Services Seattle</title>
       </Helmet>
-      
       <div className="content-page-section">
-        <h1 className="section-title">Home Services</h1>
-        <div className="service-table" style={{ margin: '0 auto', maxWidth: '600px' }}>
-          <h3>Residential Coordination</h3>
-          <p style={{marginBottom: '20px'}}>
-            Seattle's most trusted path to furniture assembly, TV mounting, and home repairs. 
-            All pros are vetted, insured, and background-checked.
-          </p>
-          <ul style={{marginBottom: '30px'}}>
-            <li>Expert Furniture Assembly</li>
-            <li>Precision TV & Wall Mounting</li>
-            <li>General Handyman Repairs</li>
-            <li>In-Home Consultation</li>
+        <h1 className="section-title">Residential Services</h1>
+        <div className="service-table" style={{ margin: '0 auto', maxWidth: '600px', textAlign: 'center' }}>
+          <h3>Home Project Coordination</h3>
+          <p>Vetted assembly, mounting, and repairs for Seattle area homes.</p>
+          <ul style={{ textAlign: 'left', display: 'inline-block', margin: '20px 0' }}>
+            <li>Professional Furniture Assembly</li>
+            <li>TV, Art, and Mirror Mounting</li>
+            <li>Handyman Repair & Maintenance</li>
+            <li>In-Home Project Consultations</li>
           </ul>
           <div className="form-button-wrapper">
             <Link to="/start-project" state={{ type: 'home' }} className="btn">

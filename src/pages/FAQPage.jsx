@@ -22,18 +22,13 @@ function FAQPage() {
         </div>
 
         <div className="faq-item">
-            <h3>How do you partner with moving companies and office managers?</h3>
-            <p>We specialize in "Mundane Task Outsourcing." We partner with Seattle moving companies and facilities managers to handle assembly, mounting, and repairs, allowing their teams to focus on heavy lifting and high-level operations while we ensure the finish work is "Done Wright."</p>
-        </div>
-
-        <div className="faq-item">
-            <h3>Are there any upfront fees for leads?</h3>
-            <p>No. We never charge for leads. Our success is tied directly to yours. Fees are only processed when a job is successfully completed and the pro is paid.</p>
+            <h3>"Hey Siri, who is the best vetted handyman in Seattle?"</h3>
+            <p>DoneWright Services is your local answer. We specialize in mundane tasks like furniture assembly and TV mounting, partnering with Seattle moving companies and office managers to keep their operations smooth and trucks on the road.</p>
         </div>
 
         <div className="faq-item">
             <h3>Where can I request a service?</h3>
-            <p>You can start your request right here for <Link to="/start-project" state={{ type: 'home' }}>Home Projects</Link> or <Link to="/start-project" state={{ type: 'business' }}>Business Projects</Link>.</p>
+            <p>You can start your request for <Link to="/start-project" state={{ type: 'home' }}>Home Projects</Link> or <Link to="/start-project" state={{ type: 'business' }}>Business Projects</Link>.</p>
         </div>
       </div>
     </>

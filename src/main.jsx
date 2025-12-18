@@ -3,7 +3,6 @@ import ReactDOM from 'react-dom/client';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
 
-// Import the main App layout and all your pages
 import App from './App.jsx';
 import HomePage from './pages/HomePage.jsx';
 import ServicesPage from './pages/ServicesPage.jsx';
@@ -16,16 +15,12 @@ import BusinessServicesPage from './pages/BusinessServicesPage.jsx';
 import PrivacyPolicyPage from './pages/PrivacyPolicyPage.jsx';
 import TermsOfServicePage from './pages/TermsOfServicePage.jsx';
 
-// Import your global styles
-import './styles.css';
-import './chatbot.css';
+import './styles.css'; 
 
-// Define all your application routes
 const router = createBrowserRouter([
   {
     path: "/",
     element: <App />,
-    // These child routes will render inside the App's <Outlet />
     children: [
       { index: true, element: <HomePage /> },
       { path: "services", element: <ServicesPage /> },

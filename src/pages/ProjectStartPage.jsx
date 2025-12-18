@@ -8,7 +8,6 @@ function ProjectStartPage() {
   const location = useLocation();
   const [formType, setFormType] = useState('');
 
-  // Automatically set the form based on the link clicked (Home or Business)
   useEffect(() => {
     if (location.state?.type) {
       setFormType(location.state.type);
@@ -48,7 +47,7 @@ function ProjectStartPage() {
           {formType === 'home' && <HomeProjectForm />}
           {formType === 'business' && <BusinessProjectForm />}
           
-          {!formType && <p style={{textAlign: 'center'}}>Please select a project type above to begin.</p>}
+          {!formType && <p style={{textAlign: 'center', marginTop: '20px'}}>Please select a project type above to see the request form.</p>}
         </div>
       </div>
     </>

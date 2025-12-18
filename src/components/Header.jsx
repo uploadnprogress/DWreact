@@ -2,34 +2,40 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 
 const Header = () => {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isNavActive, setIsNavActive] = useState(false);
 
   return (
-    <header className="header">
-      <div className="container">
-        <Link to="/" className="logo">
-          DoneWright<span>Services</span>
-        </Link>
+    <header className="main-header">
+      <div className="header-content">
+        <div className="logo-area">
+          <Link to="/" onClick={() => setIsNavActive(false)}>
+            {/* The Logo is the Home Button */}
+            <h1 style={{color: 'white', margin: 0, fontSize: '1.5rem'}}>DoneWright Services</h1>
+          </Link>
+        </div>
 
-        <nav className={`nav ${isOpen ? 'open' : ''}`}>
-          <ul>
-            <li><Link to="/">Home</Link></li>
-            {/* Fixed Links: Pointing to React Routes instead of .html files */}
-            <li><Link to="/home-services">Home Services</Link></li>
-            <li><Link to="/business-services">Business Services</Link></li>
-            <li><Link to="/faq">How It Works</Link></li>
-            <li><Link to="/contacts">Contact</Link></li>
+        <button 
+          className="mobile-nav-toggle" 
+          aria-expanded={isNavActive}
+          onClick={() => setIsNavActive(!isNavActive)}
+        >
+          <span className="hamburger-icon"></span>
+        </button>
+
+        <nav className="primary-nav-container">
+          <ul id="primary-navigation" className={isNavActive ? 'nav-active' : ''}>
+            <li><Link to="/home-services" onClick={() => setIsNavActive(false)}>Home Services</Link></li>
+            <li><Link to="/business-services" onClick={() => setIsNavActive(false)}>Business Services</Link></li>
+            <li><Link to="/services" onClick={() => setIsNavActive(false)}>Service Network</Link></li>
+            <li><Link to="/faq" onClick={() => setIsNavActive(false)}>How It Works</Link></li>
+            <li><Link to="/contacts" onClick={() => setIsNavActive(false)}>Contact</Link></li>
             <li>
-              <Link to="/start-project" className="nav-btn">Start a Project</Link>
+              <Link to="/start-project" className="btn" onClick={() => setIsNavActive(false)}>
+                Start Project
+              </Link>
             </li>
           </ul>
         </nav>
-
-        <button className="menu-toggle" onClick={() => setIsOpen(!isOpen)}>
-          <span className="bar"></span>
-          <span className="bar"></span>
-          <span className="bar"></span>
-        </button>
       </div>
     </header>
   );
