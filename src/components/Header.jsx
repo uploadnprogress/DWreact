@@ -9,12 +9,12 @@ const Header = () => {
       <div className="header-content">
         <div className="logo-area">
           <Link to="/" onClick={() => setIsNavActive(false)}>
-            {/* Logo implementation replacing text */}
+            {/* Path updated to match your public/images folder */}
             <img 
               src="/images/dws-logo.png" 
               alt="DoneWright Services Logo" 
               id="site-logo"
-              style={{ maxHeight: '50px', cursor: 'pointer' }} 
+              style={{ maxHeight: '50px', cursor: 'pointer', display: 'block' }} 
             />
           </Link>
         </div>

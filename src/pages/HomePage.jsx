@@ -12,10 +12,11 @@ function HomePage() {
         <title>DoneWright Services | Seattle Vetted Contractor Network</title>
       </Helmet>
 
-      {/* Hero Section with Correct Branding and Tagline */}
+      {/* Hero Section */}
       <section className="hero">
         <div className="container">
-          <h3 style={{ color: 'white', fontWeight: 'bold', marginBottom: '10px', textTransform: 'uppercase', letterSpacing: '1px' }}>
+          {/* Brand Name Text added here */}
+          <h3 style={{ color: 'white', fontWeight: 'bold', marginBottom: '10px', textTransform: 'uppercase', letterSpacing: '2px' }}>
             DoneWright Services
           </h3>
           <h2>We Coordinate. They Deliver.</h2>
@@ -23,20 +24,20 @@ function HomePage() {
         </div>
       </section>
 
-      {/* Services Section with Fixed Images */}
+      {/* Services Section */}
       <section className="content-section">
         <div className="container">
           <h2 className="section-title">Professional Services for Every Need</h2>
           <p className="intro">Select a service to begin.</p>
           
           <div className="service-cards">
-            {/* Residential Tile - Image Fixed */}
+            {/* Residential Tile - Image path updated to local folder */}
             <div 
               className="card" 
               onClick={() => navigate('/start-project', { state: { type: 'home' } })} 
               style={{
                 cursor: 'pointer',
-                backgroundImage: 'url("/images/home-services.jpg")',
+                backgroundImage: 'linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url("/images/home-services.jpg")',
                 backgroundSize: 'cover',
                 backgroundPosition: 'center'
               }}
@@ -53,7 +54,7 @@ function HomePage() {
               onClick={() => navigate('/start-project', { state: { type: 'business' } })} 
               style={{
                 cursor: 'pointer',
-                backgroundImage: 'url("/images/business-services.jpg")',
+                backgroundImage: 'linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url("https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=800&q=80")',
                 backgroundSize: 'cover',
                 backgroundPosition: 'center'
               }}
