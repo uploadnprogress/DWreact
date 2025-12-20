@@ -14,9 +14,9 @@ function HomePage() {
 
       <section className="hero">
         <div className="container">
-          {/* H1 is now the Brand - Dominant size */}
+          {/* H1 for Primary Brand Dominance */}
           <h1>DoneWright Services</h1>
-          {/* H2 is the Tagline - Supporting size */}
+          {/* H2 for Supporting Tagline */}
           <h2>We Coordinate. They Deliver.</h2>
           <p>Seattle's premier network of vetted independent contractors.</p>
         </div>
@@ -25,26 +25,38 @@ function HomePage() {
       <section className="content-section">
         <div className="container">
           <h2 className="section-title">Professional Services for Every Need</h2>
+          <p className="intro" style={{ textAlign: 'center' }}>Select a service category to begin.</p>
+          
           <div className="service-cards">
             <div 
               className="card" 
               onClick={() => navigate('/start-project', { state: { type: 'home' } })} 
-              style={{ backgroundImage: 'linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url("/images/home-services.jpg")' }}
+              style={{
+                cursor: 'pointer',
+                backgroundImage: 'linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url("/images/home-services.jpg")',
+                backgroundSize: 'cover',
+                backgroundPosition: 'center'
+              }}
             >
               <div className="card-content">
                 <h4>Residential</h4>
-                <p>Assembly, mounting, and repairs.</p>
+                <p>Assembly, mounting, and home repairs.</p>
               </div>
             </div>
 
             <div 
               className="card" 
               onClick={() => navigate('/start-project', { state: { type: 'business' } })} 
-              style={{ backgroundImage: 'linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url("https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=800&q=80")' }}
+              style={{
+                cursor: 'pointer',
+                backgroundImage: 'linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url("https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=800&q=80")',
+                backgroundSize: 'cover',
+                backgroundPosition: 'center'
+              }}
             >
               <div className="card-content">
                 <h4>Commercial</h4>
-                <p>Office and retail maintenance.</p>
+                <p>Office setups and retail maintenance.</p>
               </div>
             </div>
           </div>

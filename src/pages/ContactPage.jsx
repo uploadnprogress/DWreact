@@ -7,7 +7,7 @@ const ContactPage = () => {
       <Helmet><title>Contact Us | DoneWright Services</title></Helmet>
       <div className="form-container">
         <h1 className="section-title">Get In Touch</h1>
-        <form name="contact" method="POST" data-netlify="true">
+        <form name="contact" method="POST" action="/?success=true" data-netlify="true">
           <input type="hidden" name="form-name" value="contact" />
 
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px' }}>
@@ -27,18 +27,8 @@ const ContactPage = () => {
           </div>
 
           <div className="form-group">
-            <label>Subject</label>
-            <select name="subject" required>
-              <option value="general">General Inquiry</option>
-              <option value="partnership">Moving Company Partnership</option>
-              <option value="support">Project Support</option>
-              <option value="billing">Billing</option>
-            </select>
-          </div>
-
-          <div className="form-group">
             <label>Message</label>
-            <textarea name="message" rows="5" required></textarea>
+            <textarea name="message" rows="5" required placeholder="How can we help?"></textarea>
           </div>
 
           <button type="submit" className="btn">Send Message</button>
