@@ -1,78 +1,86 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const BusinessProjectForm = () => {
+  const navigate = useNavigate();
+  // Updated state to include email, phone, and address2
   const [formData, setFormData] = useState({
-    zip: '', city: '', state: ''
+    companyName: '', firstName: '', lastName: '', 
+    address: '', address2: '', zip: '', city: '', state: '', 
+    email: '', phone: '', budget: ''
   });
 
   const handleZipChange = async (e) => {
     const zip = e.target.value;
+    setFormData({ ...formData, zip });
     if (zip.length === 5) {
-      const res = await fetch(`https://api.zippopotam.us/us/${zip}`);
-      if (res.ok) {
-        const data = await res.json();
-        setFormData({
-          zip,
-          city: data.places[0]['place name'],
-          state: data.places[0]['state abbreviation']
-        });
-      }
-    } else {
-      setFormData({ ...formData, zip });
+      try {
+        const res = await fetch(`https://api.zippopotam.us/us/${zip}`);
+        if (res.ok) {
+          const data = await res.json();
+          setFormData(prev => ({ 
+            ...prev, 
+            city: data.places[0]['place name'], 
+            state: data.places[0]['state abbreviation'] 
+          }));
+        }
+      } catch (err) { console.error(err); }
     }
   };
 
+  const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const myForm = e.target;
+    const formDataObj = new FormData(myForm);
+    
+    fetch("/", {
+      method: "POST",
+      body: formDataObj
+    })
+      .then(() => {
+        alert("Business Request Received! We will be in touch shortly.");
+        navigate("/");
+      })
+      .catch(error => alert(error));
+  };
+
   return (
-    <form name="business-project" method="POST" data-netlify="true" className="project-form">
+    <form onSubmit={handleSubmit} className="project-form">
       <input type="hidden" name="form-name" value="business-project" />
       
-      <div className="form-group">
-        <label>Company Name</label>
-        <input type="text" name="companyName" required />
-      </div>
-
+      <div className="form-group"><label>Company Name*</label><input type="text" name="companyName" required onChange={handleChange} /></div>
+      
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px' }}>
-        <div className="form-group">
-          <label>First Name (Contact)</label>
-          <input type="text" name="firstName" required />
-        </div>
-        <div className="form-group">
-          <label>Last Name (Contact)</label>
-          <input type="text" name="lastName" required />
-        </div>
+        <div className="form-group"><label>Contact First Name*</label><input type="text" name="firstName" required onChange={handleChange} /></div>
+        <div className="form-group"><label>Contact Last Name*</label><input type="text" name="lastName" required onChange={handleChange} /></div>
       </div>
-
-      <div className="form-group">
-        <label>Office/Site Address</label>
-        <input type="text" name="address" required />
-      </div>
-
+      
+      <div className="form-group"><label>Office Street Address*</label><input type="text" name="address" required onChange={handleChange} /></div>
+      <div className="form-group"><label>Suite / Unit / Floor</label><input type="text" name="address2" onChange={handleChange} /></div>
+      
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '15px' }}>
-        <div className="form-group">
-          <label>ZIP Code</label>
-          <input type="text" name="zip" required value={formData.zip} onChange={handleZipChange} maxLength="5" />
-        </div>
-        <div className="form-group">
-          <label>City</label>
-          <input type="text" name="city" required value={formData.city} readOnly />
-        </div>
-        <div className="form-group">
-          <label>State</label>
-          <input type="text" name="state" required value={formData.state} readOnly />
-        </div>
+        <div className="form-group"><label>ZIP*</label><input type="text" name="zip" required value={formData.zip} onChange={handleZipChange} maxLength="5" /></div>
+        <div className="form-group"><label>City*</label><input type="text" name="city" value={formData.city} readOnly /></div>
+        <div className="form-group"><label>State*</label><input type="text" name="state" value={formData.state} readOnly /></div>
       </div>
+      
+      {/* Added Email and Phone to match Home Form logic */}
+      <div className="form-group"><label>Work Email*</label><input type="email" name="email" required onChange={handleChange} /></div>
+      <div className="form-group"><label>Work Phone</label><input type="tel" name="phone" onChange={handleChange} /></div>
 
       <div className="form-group">
-        <label>Project Budget</label>
-        <select name="budget" required>
-          <option value="">Select a range</option>
+        <label>Estimated Budget*</label>
+        <select name="budget" required onChange={handleChange}>
+          <option value="">Select range</option>
           <option value="under-500">Under $500</option>
           <option value="500-2000">$500 - $2,000</option>
           <option value="2000-5000">$2,000 - $5,000</option>
           <option value="5000-plus">$5,000+</option>
         </select>
       </div>
-
+      
       <button type="submit" className="btn">Submit Business Request</button>
     </form>
   );
