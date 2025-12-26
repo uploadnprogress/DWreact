@@ -1,96 +1,118 @@
 import React, { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
-function JoinUsPage() {
-  const [formType, setFormType] = useState(''); // 'individual' or 'company'
+const JoinUsPage = () => {
+  const navigate = useNavigate();
+  // State includes ALL fields from your original ju.html
+  const [formData, setFormData] = useState({
+    applicantType: '', firstName: '', lastName: '', businessName: '',
+    address: '', address2: '', city: '', state: '', zip: '',
+    email: '', phone: '', servicesOffered: '', serviceAreas: ''
+  });
+
+  const handleZipChange = async (e) => {
+    const zip = e.target.value;
+    setFormData({ ...formData, zip });
+    if (zip.length === 5) {
+      try {
+        const res = await fetch(`https://api.zippopotam.us/us/${zip}`);
+        if (res.ok) {
+          const data = await res.json();
+          setFormData(prev => ({ 
+            ...prev, 
+            city: data.places[0]['place name'], 
+            state: data.places[0]['state abbreviation'] 
+          }));
+        }
+      } catch (err) { console.error(err); }
+    }
+  };
+
+  const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const myForm = e.target;
+    const formDataObj = new FormData(myForm);
+    
+    fetch("/", {
+      method: "POST",
+      body: formDataObj
+    })
+      .then(() => {
+        alert("Application Submitted! We will review your credentials.");
+        navigate("/");
+      })
+      .catch(error => alert(error));
+  };
 
   return (
-    <>
-      <Helmet>
-        <title>Become a Provider | DoneWright Services</title>
-        <meta name="description" content="Join the DoneWright Services nationwide network of vetted professionals." />
-      </Helmet>
-      <div className="form-section">
-        <div className="form-container">
-          <h1 className="section-title">Join Our Network</h1>
-          <p className="intro" style={{textAlign: 'center', marginBottom: '20px'}}>Select your provider type to begin the application.</p>
-
-          <div className="radio-container">
-            <label>
-              <input type="radio" name="userTypeToggle" onChange={() => setFormType('individual')} checked={formType === 'individual'} /> Individual Provider
+    <div className="form-section">
+      <Helmet><title>Join Our Network | DoneWright Services</title></Helmet>
+      <div className="form-container">
+        <h1 className="section-title">Network Application</h1>
+        <p style={{ textAlign: 'center', marginBottom: '20px' }}>Independent Contractors & Vendors</p>
+        
+        <form name="provider-signup" onSubmit={handleSubmit}>
+          <input type="hidden" name="form-name" value="provider-signup" />
+          
+          {/* 1. Applicant Type (From original) */}
+          <div className="radio-container" style={{ textAlign: 'center', marginBottom: '20px' }}>
+            <label style={{ marginRight: '15px' }}>
+              <input type="radio" name="applicantType" value="contractor" required onChange={handleChange} /> Independent Contractor
             </label>
             <label>
-              <input type="radio" name="userTypeToggle" onChange={() => setFormType('company')} checked={formType === 'company'} /> Company/Team
+              <input type="radio" name="applicantType" value="vendor" required onChange={handleChange} /> Vendor / Supplier
             </label>
           </div>
 
-          {formType && (
-            <form 
-              name="ContractorApplication" 
-              method="POST" 
-              data-netlify="true" 
-              encType="multipart/form-data"
-              action="/faq" 
-            >
-              {/* Hidden field required for Netlify to identify the form */}
-              <input type="hidden" name="form-name" value="ContractorApplication" />
-              <input type="hidden" name="provider-type" value={formType} />
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px' }}>
+            <div className="form-group"><label>First Name*</label><input type="text" name="firstName" required onChange={handleChange} /></div>
+            <div className="form-group"><label>Last Name*</label><input type="text" name="lastName" required onChange={handleChange} /></div>
+          </div>
 
-              {formType === 'individual' ? (
-                <>
-                  <div className="form-group">
-                    <label>First Name*</label>
-                    <input type="text" name="firstName" required />
-                  </div>
-                  <div className="form-group">
-                    <label>Last Name*</label>
-                    <input type="text" name="lastName" required />
-                  </div>
-                </>
-              ) : (
-                <>
-                  <div className="form-group">
-                    <label>Company Name*</label>
-                    <input type="text" name="companyName" required />
-                  </div>
-                  <div className="form-group">
-                    <label>Tax ID / EIN*</label>
-                    <input type="text" name="taxId" required />
-                  </div>
-                </>
-              )}
+          <div className="form-group"><label>Business Name (if applicable)</label><input type="text" name="businessName" onChange={handleChange} /></div>
 
-              <div className="form-group">
-                <label>Email Address*</label>
-                <input type="email" name="email" required />
-              </div>
-              <div className="form-group">
-                <label>Phone Number*</label>
-                <input type="tel" name="phone" required />
-              </div>
+          <div className="form-group"><label>Street Address*</label><input type="text" name="address" required onChange={handleChange} /></div>
+          <div className="form-group"><label>Suite/Unit</label><input type="text" name="address2" onChange={handleChange} /></div>
 
-              <div className="form-group">
-                <label>Proof of Insurance (Upload File)*</label>
-                <input type="file" name="insuranceProof" required />
-              </div>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '15px' }}>
+            <div className="form-group"><label>ZIP*</label><input type="text" name="zip" required value={formData.zip} onChange={handleZipChange} maxLength="5" /></div>
+            <div className="form-group"><label>City*</label><input type="text" name="city" value={formData.city} readOnly /></div>
+            <div className="form-group"><label>State*</label><input type="text" name="state" value={formData.state} readOnly /></div>
+          </div>
 
-              <div className="checkbox-group">
-                <label>
-                  <input type="checkbox" name="acceptTerms" required />
-                  I agree to the <Link to="/terms">Terms</Link> and <Link to="/privacy">Privacy Policy</Link>.
-                </label>
-              </div>
+          <div className="form-group"><label>Contact Email*</label><input type="email" name="email" required onChange={handleChange} /></div>
+          <div className="form-group"><label>Phone</label><input type="tel" name="phone" onChange={handleChange} /></div>
 
-              <div className="form-button-wrapper">
-                <button type="submit" className="btn">Submit Application</button>
-              </div>
-            </form>
-          )}
-        </div>
+          <div className="form-group"><label>Services Offered / Primary Products*</label><textarea name="servicesOffered" required onChange={handleChange} rows="3"></textarea></div>
+          <div className="form-group"><label>Service Areas (Cities/Counties)*</label><input type="text" name="serviceAreas" required onChange={handleChange} /></div>
+
+          {/* File Uploads (Matching names from original) */}
+          <div className="form-group"><label>Certifications/Licenses</label><input type="file" name="certificationsFile" /></div>
+          <div className="form-group"><label>Proof of General Liability Insurance*</label><input type="file" name="insuranceFile" required /></div>
+          <div className="form-group"><label>Catalog / Proof of Work (Optional)</label><input type="file" name="additionalFile" /></div>
+
+          {/* Checkbox Agreements */}
+          <div className="checkbox-group">
+            <label>
+              <input type="checkbox" name="independentAcknowledgement" value="agreed" required />
+              * I acknowledge I am applying as an independent contractor/vendor.
+            </label>
+          </div>
+          <div className="checkbox-group">
+            <label>
+              <input type="checkbox" name="feeAgreement" value="agreed" required />
+              * I agree to DoneWright Services' 5% coordination fee on matched projects.
+            </label>
+          </div>
+
+          <button type="submit" className="btn">Submit Application</button>
+        </form>
       </div>
-    </>
+    </div>
   );
-}
+};
 
 export default JoinUsPage;

@@ -1,79 +1,86 @@
 import React, { useState } from 'react';
-import { Helmet } from 'react-helmet-async';
 
-function ContactPage() {
-  const [formData, setFormData] = useState({ name: '', email: '', message: '' });
-  const [isSubmitting, setIsSubmitting] = useState(false);
+const Contact = () => {
+  // Hardcoded Make Webhook URL
+  const webhookUrl = "https://hook.us2.make.com/71zlo1hovhtyhcebw7t37terano9bhpf"; 
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
-  };
+  const [status, setStatus] = useState(null); // 'submitting', 'success', 'error'
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setIsSubmitting(true);
+    setStatus('submitting');
 
-    if (!Object.values(formData).every(field => field.trim() !== '')) {
-      alert('Please fill in all required fields.');
-      setIsSubmitting(false);
-      return;
-    }
+    const form = e.target;
+    const formData = new FormData(form);
 
     try {
-      // This sends the data to your backend API endpoint
-      const response = await fetch('/api/send-contact-email', {
+      const response = await fetch(webhookUrl, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...formData, formType: 'contact_us' })
+        body: formData,
       });
 
-      const result = await response.json();
-      if (response.ok && result.success) {
-        alert('Thank you for your message! We will get back to you shortly.');
-        setFormData({ name: '', email: '', message: '' });
+      if (response.ok) {
+        setStatus('success');
+        form.reset(); 
       } else {
-        alert(`Message failed to send: ${result.error || 'Unknown server error'}.`);
+        setStatus('error');
       }
     } catch (error) {
-      alert('Message failed to send due to a network error. Please try again.');
-    } finally {
-      setIsSubmitting(false);
+      console.error("Error submitting form:", error);
+      setStatus('error');
     }
   };
 
   return (
-    <>
-      <Helmet>
-        <title>Contact Us | DoneWright Services</title>
-        <meta name="description" content="Have questions? Reach out to the DoneWright Services team. We're here to help you get started on your next project." />
-      </Helmet>
-      <div className="form-section">
-        <div className="form-container">
-          <h1 className="section-title">Contact Us</h1>
-          <form id="contact-form" onSubmit={handleSubmit}>
-            <div className="form-group">
-                <label htmlFor="name">Your Name*</label>
-                <input type="text" id="name" name="name" value={formData.name} onChange={handleChange} required />
-            </div>
-            <div className="form-group">
-                <label htmlFor="email">Your Email*</label>
-                <input type="email" id="email" name="email" value={formData.email} onChange={handleChange} required />
-            </div>
-            <div className="form-group">
-                <label htmlFor="message">Your Message*</label>
-                <textarea id="message" name="message" value={formData.message} onChange={handleChange} required rows="6"></textarea>
-            </div>
-            <div className="form-button-wrapper">
-                <button type="submit" className="btn" disabled={isSubmitting}>
-                    {isSubmitting ? 'Sending...' : 'Send Message'}
-                </button>
-            </div>
-          </form>
+    <div className="contact-section">
+      <h2>Contact Us</h2>
+      
+      {status === 'success' ? (
+        <div className="success-message" style={{ padding: '20px', background: '#d4edda', color: '#155724', borderRadius: '5px' }}>
+          <h3>Message Sent!</h3>
+          <p>Thank you. We will get back to you shortly.</p>
+          <button onClick={() => setStatus(null)} style={{ marginTop: '10px' }}>Send another</button>
         </div>
-      </div>
-    </>
-  );
-}
+      ) : (
+        <form onSubmit={handleSubmit}>
+          <div style={{ marginBottom: '15px' }}>
+            <label htmlFor="name" style={{ display: 'block', marginBottom: '5px' }}>Name:</label>
+            <input type="text" id="name" name="name" required style={{ width: '100%', padding: '8px' }} />
+          </div>
 
-export default ContactPage;
+          <div style={{ marginBottom: '15px' }}>
+            <label htmlFor="email" style={{ display: 'block', marginBottom: '5px' }}>Email:</label>
+            <input type="email" id="email" name="email" required style={{ width: '100%', padding: '8px' }} />
+          </div>
+
+          <div style={{ marginBottom: '15px' }}>
+            <label htmlFor="message" style={{ display: 'block', marginBottom: '5px' }}>Message:</label>
+            <textarea id="message" name="message" required rows="5" style={{ width: '100%', padding: '8px' }}></textarea>
+          </div>
+
+          <input type="hidden" name="source" value="live_site_contact" />
+
+          <button 
+            type="submit" 
+            disabled={status === 'submitting'}
+            style={{ 
+              padding: '10px 20px', 
+              backgroundColor: status === 'submitting' ? '#ccc' : '#007BFF', 
+              color: 'white', 
+              border: 'none', 
+              cursor: 'pointer' 
+            }}
+          >
+            {status === 'submitting' ? 'Sending...' : 'Send Message'}
+          </button>
+          
+          {status === 'error' && (
+            <p style={{ color: 'red', marginTop: '10px' }}>Error sending message. Please try again.</p>
+          )}
+        </form>
+      )}
+    </div>
+  );
+};
+
+export default Contact;

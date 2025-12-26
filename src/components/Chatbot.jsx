@@ -1,58 +1,95 @@
 import React, { useState } from 'react';
 
-function Chatbot() {
-  const [isOpen, setIsOpen] = useState(false);
+const Chat = () => {
+  // --- CONFIGURATION ---
+  // PASTE YOUR NEW MAKE WEBHOOK URL HERE (The one connected to Anthropic)
+  const webhookUrl = "https://hook.us2.make.com/5wkom3twqpd7mx9vlcpdwhkfoxr84eho"; 
+  // ---------------------
+
   const [messages, setMessages] = useState([
-    { id: 1, text: "Hi there! How can I help you with your project today?", sender: 'bot' }
+    { role: 'assistant', content: 'Hello! How can I help you today?' }
   ]);
-  const [inputValue, setInputValue] = useState('');
+  const [input, setInput] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
-  const toggleChat = () => setIsOpen(!isOpen);
-
-  const handleInputChange = (e) => setInputValue(e.target.value);
-
-  const handleSendMessage = (e) => {
+  const sendMessage = async (e) => {
     e.preventDefault();
-    if (inputValue.trim() === '') return;
+    if (!input.trim()) return;
 
-    const newUserMessage = { id: Date.now(), text: inputValue, sender: 'user' };
-    const botReply = { id: Date.now() + 1, text: "Thanks for your message! A specialist will review this and get back to you shortly.", sender: 'bot' };
-    
-    setMessages(prev => [...prev, newUserMessage, botReply]);
-    setInputValue('');
+    // 1. Add user message to UI immediately
+    const userMessage = { role: 'user', content: input };
+    setMessages((prev) => [...prev, userMessage]);
+    setInput('');
+    setIsLoading(true);
+
+    try {
+      // 2. Send to Make Webhook
+      const response = await fetch(webhookUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ message: input }), // Sending as JSON
+      });
+
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+
+      // 3. Get the answer text from Make
+      const data = await response.text(); 
+      
+      // 4. Add AI response to UI
+      setMessages((prev) => [...prev, { role: 'assistant', content: data }]);
+
+    } catch (error) {
+      console.error("Chat Error:", error);
+      setMessages((prev) => [...prev, { role: 'assistant', content: "Sorry, I'm having trouble connecting right now." }]);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
-    <div className="chatbot-container">
-      {isOpen && (
-        <div className="chat-window">
-          <div className="chat-header">
-            <h3>DoneWright Assistant</h3>
-            <button onClick={toggleChat} className="close-chat-btn">&times;</button>
+    <div className="chat-container" style={{ maxWidth: '400px', margin: '20px auto', border: '1px solid #ddd', borderRadius: '8px', overflow: 'hidden' }}>
+      <div className="chat-history" style={{ height: '300px', overflowY: 'auto', padding: '15px', background: '#f9f9f9' }}>
+        {messages.map((msg, index) => (
+          <div key={index} style={{ 
+            marginBottom: '10px', 
+            textAlign: msg.role === 'user' ? 'right' : 'left' 
+          }}>
+            <span style={{ 
+              display: 'inline-block',
+              padding: '8px 12px', 
+              borderRadius: '15px',
+              background: msg.role === 'user' ? '#007BFF' : '#E9ECEF',
+              color: msg.role === 'user' ? '#fff' : '#333'
+            }}>
+              {msg.content}
+            </span>
           </div>
-          <div className="message-list">
-            {messages.map((message) => (
-              <div key={message.id} className={`message ${message.sender === 'user' ? 'user-message' : 'bot-message'}`}>
-                {message.text}
-              </div>
-            ))}
-          </div>
-          <form className="chat-input-form" onSubmit={handleSendMessage}>
-            <input
-              type="text"
-              value={inputValue}
-              onChange={handleInputChange}
-              placeholder="Type your message..."
-            />
-            <button type="submit">Send</button>
-          </form>
-        </div>
-      )}
-      <button onClick={toggleChat} className="chat-widget-button" aria-label="Open chat">
-        💬
-      </button>
+        ))}
+        {isLoading && <div style={{ textAlign: 'left', color: '#888' }}>Typing...</div>}
+      </div>
+
+      <form onSubmit={sendMessage} style={{ display: 'flex', borderTop: '1px solid #ddd' }}>
+        <input
+          type="text"
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          placeholder="Type a message..."
+          style={{ flex: 1, padding: '10px', border: 'none', outline: 'none' }}
+        />
+        <button 
+          type="submit" 
+          disabled={isLoading}
+          style={{ padding: '10px 20px', background: '#007BFF', color: '#fff', border: 'none', cursor: 'pointer' }}
+        >
+          Send
+        </button>
+      </form>
     </div>
   );
-}
+};
 
-export default Chatbot;
+export default Chat;
