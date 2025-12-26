@@ -1,17 +1,27 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
 const Chatbot = () => {
   // --- CONFIGURATION ---
-  // Your working Make Webhook URL
   const webhookUrl = "https://hook.us2.make.com/5wkom3twqpd7mx9vlcpdwhkfoxr84eho"; 
   // ---------------------
 
-  const [isOpen, setIsOpen] = useState(false); // Controls if chat window is visible
+  const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState([
     { role: 'assistant', content: 'Hello! How can I help you today?' }
   ]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+
+  // Auto-scroll ref
+  const messagesEndRef = useRef(null);
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages, isOpen]);
 
   const toggleChat = () => {
     setIsOpen(!isOpen);
@@ -21,14 +31,14 @@ const Chatbot = () => {
     e.preventDefault();
     if (!input.trim()) return;
 
-    // 1. Add user message to UI immediately
+    // 1. Add user message
     const userMessage = { role: 'user', content: input };
     setMessages((prev) => [...prev, userMessage]);
     setInput('');
     setIsLoading(true);
 
     try {
-      // 2. Send to Make Webhook
+      // 2. Send to Webhook
       const response = await fetch(webhookUrl, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -39,7 +49,7 @@ const Chatbot = () => {
 
       const data = await response.text(); 
       
-      // 3. Add AI response to UI
+      // 3. Add AI response
       setMessages((prev) => [...prev, { role: 'assistant', content: data }]);
 
     } catch (error) {
@@ -51,104 +61,53 @@ const Chatbot = () => {
   };
 
   return (
-    <>
-      {/* 1. FLOATING BUTTON (Always Visible) */}
-      <button 
-        onClick={toggleChat}
-        style={{
-          position: 'fixed',
-          bottom: '20px',
-          right: '20px',
-          width: '60px',
-          height: '60px',
-          borderRadius: '50%',
-          backgroundColor: '#007BFF',
-          color: 'white',
-          border: 'none',
-          boxShadow: '0 4px 8px rgba(0,0,0,0.2)',
-          cursor: 'pointer',
-          zIndex: 9999,
-          fontSize: '24px',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center'
-        }}
-      >
-        {isOpen ? '✕' : '💬'}
-      </button>
-
-      {/* 2. CHAT WINDOW (Only visible when isOpen is true) */}
+    <div className="chatbot-container">
+      
+      {/* CHAT WINDOW (Conditionally rendered) */}
       {isOpen && (
-        <div className="chat-window" style={{
-          position: 'fixed',
-          bottom: '90px',
-          right: '20px',
-          width: '350px',
-          height: '500px',
-          backgroundColor: 'white',
-          borderRadius: '10px',
-          boxShadow: '0 5px 15px rgba(0,0,0,0.2)',
-          zIndex: 9999,
-          display: 'flex',
-          flexDirection: 'column',
-          overflow: 'hidden',
-          border: '1px solid #ddd'
-        }}>
+        <div className="chat-window">
           {/* Header */}
-          <div style={{ padding: '15px', background: '#007BFF', color: 'white', fontWeight: 'bold' }}>
-            DoneWright Assistant
+          <div className="chat-header">
+            <h3>DoneWright Assistant</h3>
+            <button className="close-chat-btn" onClick={toggleChat}>×</button>
           </div>
 
           {/* Messages Area */}
-          <div style={{ flex: 1, padding: '15px', overflowY: 'auto', background: '#f9f9f9' }}>
+          <div className="message-list">
             {messages.map((msg, index) => (
-              <div key={index} style={{ 
-                marginBottom: '10px', 
-                textAlign: msg.role === 'user' ? 'right' : 'left' 
-              }}>
-                <span style={{ 
-                  display: 'inline-block',
-                  padding: '8px 12px', 
-                  borderRadius: '15px',
-                  background: msg.role === 'user' ? '#007BFF' : '#E9ECEF',
-                  color: msg.role === 'user' ? '#fff' : '#333',
-                  maxWidth: '80%',
-                  wordWrap: 'break-word'
-                }}>
-                  {msg.content}
-                </span>
+              <div 
+                key={index} 
+                className={`message ${msg.role === 'user' ? 'user-message' : 'bot-message'}`}
+              >
+                {msg.content}
               </div>
             ))}
-            {isLoading && <div style={{ textAlign: 'left', color: '#888', fontStyle: 'italic' }}>Typing...</div>}
+            {isLoading && <div className="message bot-message">Typing...</div>}
+            {/* Invisible element to scroll to */}
+            <div ref={messagesEndRef} />
           </div>
 
-          {/* Input Area */}
-          <form onSubmit={sendMessage} style={{ display: 'flex', borderTop: '1px solid #ddd' }}>
+          {/* Input Form */}
+          <form className="chat-input-form" onSubmit={sendMessage}>
             <input
               type="text"
               value={input}
               onChange={(e) => setInput(e.target.value)}
               placeholder="Type a message..."
-              style={{ flex: 1, padding: '15px', border: 'none', outline: 'none' }}
             />
-            <button 
-              type="submit" 
-              disabled={isLoading}
-              style={{ 
-                padding: '0 20px', 
-                background: '#007BFF', 
-                color: 'white', 
-                border: 'none', 
-                cursor: 'pointer',
-                fontWeight: 'bold' 
-              }}
-            >
+            <button type="submit" disabled={isLoading}>
               Send
             </button>
           </form>
         </div>
       )}
-    </>
+
+      {/* FLOATING BUTTON */}
+      <button className="chat-widget-button" onClick={toggleChat}>
+        {isOpen ? '✕' : '💬'}
+      </button>
+
+    </div>
   );
 };
 
