@@ -525,3 +525,32 @@ nav.primary-nav-container > ul#primary-navigation li a:hover {
     margin: 0 auto;
     padding: 20px;
 }
+
+/* =========================================
+   10. HOMEPAGE ALIGNMENT FIX (Join Network)
+   ========================================= */
+
+/* Force the entire "Join Our Network" section to center text */
+#join-network {
+    text-align: center !important;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Force the button wrapper to center the button */
+#join-network .form-button-wrapper {
+    display: flex !important;
+    justify-content: center !important;
+    width: 100% !important;
+    text-align: center !important;
+    margin-top: 20px;
+}
+
+/* Ensure the intro paragraph is also centered and readable */
+#join-network .intro {
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center !important;
+}
