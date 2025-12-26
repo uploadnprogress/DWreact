@@ -637,9 +637,8 @@ nav.primary-nav-container > ul#primary-navigation li a:hover {
         border-bottom: none; /* Cleaner look on mobile */
     }
 }
-
 /* =========================================
-   12. HOW IT WORKS / FAQ STYLING
+   12. FAQ / HOW IT WORKS PAGE STYLING
    ========================================= */
 
 /* The 3-Column Advantage Grid */
@@ -678,7 +677,7 @@ nav.primary-nav-container > ul#primary-navigation li a:hover {
     line-height: 1.6;
 }
 
-/* FAQ Text Styling */
+/* FAQ Text Layout */
 .faq-content {
     text-align: left;
     max-width: 900px;
