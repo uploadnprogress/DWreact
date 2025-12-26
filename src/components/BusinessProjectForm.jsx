@@ -3,7 +3,8 @@ import { useNavigate } from 'react-router-dom';
 
 const BusinessProjectForm = () => {
   const navigate = useNavigate();
-  // Updated state to include email, phone, and address2
+  const webhookUrl = "https://hook.us2.make.com/71zlo1hovhtyhcebw7t37terano9bhpf";
+
   const [formData, setFormData] = useState({
     companyName: '', firstName: '', lastName: '', 
     address: '', address2: '', zip: '', city: '', state: '', 
@@ -30,25 +31,32 @@ const BusinessProjectForm = () => {
 
   const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const myForm = e.target;
     const formDataObj = new FormData(myForm);
     
-    fetch("/", {
-      method: "POST",
-      body: formDataObj
-    })
-      .then(() => {
+    try {
+      const response = await fetch(webhookUrl, {
+        method: "POST",
+        body: formDataObj
+      });
+      if (response.ok) {
         alert("Business Request Received! We will be in touch shortly.");
         navigate("/");
-      })
-      .catch(error => alert(error));
+      } else {
+        alert("Error submitting request.");
+      }
+    } catch (error) {
+      console.error(error);
+      alert("Network error.");
+    }
   };
 
   return (
     <form onSubmit={handleSubmit} className="project-form">
       <input type="hidden" name="form-name" value="business-project" />
+      <input type="hidden" name="source" value="react_business_project" />
       
       <div className="form-group"><label>Company Name*</label><input type="text" name="companyName" required onChange={handleChange} /></div>
       
@@ -66,7 +74,6 @@ const BusinessProjectForm = () => {
         <div className="form-group"><label>State*</label><input type="text" name="state" value={formData.state} readOnly /></div>
       </div>
       
-      {/* Added Email and Phone to match Home Form logic */}
       <div className="form-group"><label>Work Email*</label><input type="email" name="email" required onChange={handleChange} /></div>
       <div className="form-group"><label>Work Phone</label><input type="tel" name="phone" onChange={handleChange} /></div>
 
@@ -81,7 +88,9 @@ const BusinessProjectForm = () => {
         </select>
       </div>
       
-      <button type="submit" className="btn">Submit Business Request</button>
+      <div className="form-button-wrapper">
+        <button type="submit" className="btn">Submit Business Request</button>
+      </div>
     </form>
   );
 };
