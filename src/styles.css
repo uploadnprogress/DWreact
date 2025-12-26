@@ -405,13 +405,6 @@ nav.primary-nav-container > ul#primary-navigation li a:hover {
 }
 .btn:hover { transform: scale(1.05); }
 
-/* Footer */
-.main-footer {
-    background: linear-gradient(to top, var(--primary-blue), var(--lighter-blue-gradient-end));
-    color: white; text-align: center; padding: 40px 20px; margin-top: auto;
-}
-.footer-container { display: flex; justify-content: center; gap: 40px; flex-wrap: wrap; }
-.footer-section a { color: white; text-decoration: none; }
 /* =========================================
    8. SAFETY RESTORATION (Popups & Complex Forms)
    ========================================= */
@@ -553,4 +546,94 @@ nav.primary-nav-container > ul#primary-navigation li a:hover {
     margin-left: auto;
     margin-right: auto;
     text-align: center !important;
+}
+
+/* =========================================
+   11. FOOTER ALIGNMENT FIX
+   ========================================= */
+
+.main-footer {
+    background: linear-gradient(to top, var(--primary-blue), var(--lighter-blue-gradient-end));
+    color: var(--text-light);
+    padding: 60px 20px 30px; /* More top padding for breathing room */
+    margin-top: auto;
+}
+
+.footer-container {
+    display: flex;
+    justify-content: center; /* Centers the whole block */
+    align-items: flex-start; /* Aligns tops of columns perfectly */
+    gap: 60px; /* Nice wide gap between columns */
+    flex-wrap: wrap;
+    max-width: 1200px;
+    margin: 0 auto 40px auto;
+}
+
+.footer-section {
+    flex: 0 1 auto; /* Prevents them from stretching weirdly */
+    min-width: 200px; /* Ensures they don't get too squished */
+    text-align: left; /* Keeps list items aligned cleanly */
+}
+
+.footer-section h3 {
+    color: #e0f7fa;
+    font-size: 1.2rem;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+    padding-bottom: 10px;
+    display: inline-block;
+}
+
+.footer-section ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.footer-section ul li {
+    margin-bottom: 12px;
+}
+
+.footer-section ul li a {
+    color: white;
+    text-decoration: none;
+    font-size: 1rem;
+    opacity: 0.9;
+    transition: opacity 0.2s;
+}
+
+.footer-section ul li a:hover {
+    opacity: 1;
+    text-decoration: underline;
+}
+
+/* Bottom Copyright Area */
+.footer-disclaimer, .copyright {
+    text-align: center;
+    font-size: 0.9rem;
+    opacity: 0.8;
+    max-width: 800px;
+    margin: 0 auto 10px;
+}
+
+/* Mobile Stack Fix */
+@media (max-width: 768px) {
+    .footer-container {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: 40px;
+    }
+    
+    .footer-section {
+        text-align: center;
+        width: 100%;
+    }
+    
+    .footer-section h3 {
+        display: block;
+        border-bottom: none; /* Cleaner look on mobile */
+    }
 }
