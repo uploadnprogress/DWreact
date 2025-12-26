@@ -1,107 +1,95 @@
 import React, { useState, useEffect, useRef } from 'react';
 
-const Chatbot = () => {
-    const [isOpen, setIsOpen] = useState(false);
-    const [messages, setMessages] = useState([]);
-    const [userInput, setUserInput] = useState('');
-    const [isTyping, setIsTyping] = useState(false);
-    
-    const chatboxRef = useRef(null);
-    const containerRef = useRef(null);
+const Chat = () => {
+  // --- CONFIGURATION ---
+  // PASTE YOUR NEW MAKE WEBHOOK URL HERE (The one connected to Anthropic)
+  const webhookUrl = "https://hook.us2.make.com/5wkom3twqpd7mx9vlcpdwhkfoxr84eho"; 
+  // ---------------------
 
-    const MAX_HISTORY_LENGTH = 8;
+  const [messages, setMessages] = useState([
+    { role: 'assistant', content: 'Hello! How can I help you today?' }
+  ]);
+  const [input, setInput] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
-    // Minimize chat if clicking outside - aligns with your request
-    useEffect(() => {
-        const handleClickOutside = (event) => {
-            if (containerRef.current && !containerRef.current.contains(event.target)) {
-                setIsOpen(false);
-            }
-        };
-        if (isOpen) {
-            document.addEventListener('mousedown', handleClickOutside);
-        }
-        return () => document.removeEventListener('mousedown', handleClickOutside);
-    }, [isOpen]);
+  const sendMessage = async (e) => {
+    e.preventDefault();
+    if (!input.trim()) return;
 
-    // Auto-scroll to keep the latest message in view
-    useEffect(() => {
-        if (chatboxRef.current) {
-            chatboxRef.current.scrollTop = chatboxRef.current.scrollHeight;
-        }
-    }, [messages, isTyping]);
+    // 1. Add user message to UI immediately
+    const userMessage = { role: 'user', content: input };
+    setMessages((prev) => [...prev, userMessage]);
+    setInput('');
+    setIsLoading(true);
 
-    const handleSend = async () => {
-        if (!userInput.trim()) return;
-        const newUserMessage = { role: 'user', content: userInput };
-        const updatedHistory = [...messages, newUserMessage];
-        setMessages(updatedHistory);
-        setUserInput('');
-        setIsTyping(true);
+    try {
+      // 2. Send to Make Webhook
+      const response = await fetch(webhookUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ message: input }), // Sending as JSON
+      });
 
-        try {
-            const historyToSend = updatedHistory.slice(-MAX_HISTORY_LENGTH);
-            const response = await fetch('/api/chat', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ message: userInput, history: historyToSend })
-            });
-            const data = await response.json();
-            setIsTyping(false);
-            if (response.ok) {
-                setMessages(prev => [...prev, { role: 'assistant', content: data.reply }]);
-            }
-        } catch (error) {
-            setIsTyping(false);
-            setMessages(prev => [...prev, { role: 'assistant', content: 'Network error.' }]);
-        }
-    };
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
 
-    return (
-        <div ref={containerRef}>
-            {/* The Trigger: Using your styles.css logic for buttons */}
-            {!isOpen && (
-                <button 
-                    className="btn" 
-                    onClick={() => setIsOpen(true)}
-                    style={{ position: 'fixed', bottom: '20px', right: '20px', zIndex: 1002, borderRadius: '50%', width: '60px', height: '60px' }}
-                >
-                    💬
-                </button>
-            )}
+      // 3. Get the answer text from Make
+      const data = await response.text(); 
+      
+      // 4. Add AI response to UI
+      setMessages((prev) => [...prev, { role: 'assistant', content: data }]);
 
-            {/* The Window: Using .popup-container and .chatbox from your styles.css */}
-            {isOpen && (
-                <div className="popup-overlay show">
-                    <div className="popup-container" style={{ position: 'fixed', bottom: '20px', right: '20px', margin: 0 }}>
-                        <button className="close-btn" onClick={() => setIsOpen(false)}>&times;</button>
-                        <h2>DoneWright Assistant</h2>
-                        
-                        <div className="chatbox" ref={chatboxRef} style={{ height: '300px', overflowY: 'auto', marginBottom: '15px', padding: '10px', border: '1px solid #ddd' }}>
-                            {messages.length === 0 && <div className="message-bubble bot-bubble"><span>Hi! How can I help you today?</span></div>}
-                            {messages.map((msg, i) => (
-                                <div key={i} className={`message-bubble ${msg.role === 'assistant' ? 'bot-bubble' : 'user-bubble'}`} style={{ marginBottom: '10px' }}>
-                                    <span>{msg.content}</span>
-                                </div>
-                            ))}
-                            {isTyping && <div className="message-bubble bot-bubble"><span>Typing...</span></div>}
-                        </div>
+    } catch (error) {
+      console.error("Chat Error:", error);
+      setMessages((prev) => [...prev, { role: 'assistant', content: "Sorry, I'm having trouble connecting right now." }]);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
-                        <div className="form-group" style={{ display: 'flex', gap: '5px' }}>
-                            <input 
-                                type="text" 
-                                value={userInput} 
-                                onChange={(e) => setUserInput(e.target.value)}
-                                onKeyPress={(e) => e.key === 'Enter' && handleSend()}
-                                placeholder="Type a message..."
-                            />
-                            <button className="btn" onClick={handleSend} style={{ marginTop: 0, padding: '5px 15px' }}>Send</button>
-                        </div>
-                    </div>
-                </div>
-            )}
-        </div>
-    );
+  return (
+    <div className="chat-container" style={{ maxWidth: '400px', margin: '20px auto', border: '1px solid #ddd', borderRadius: '8px', overflow: 'hidden' }}>
+      <div className="chat-history" style={{ height: '300px', overflowY: 'auto', padding: '15px', background: '#f9f9f9' }}>
+        {messages.map((msg, index) => (
+          <div key={index} style={{ 
+            marginBottom: '10px', 
+            textAlign: msg.role === 'user' ? 'right' : 'left' 
+          }}>
+            <span style={{ 
+              display: 'inline-block',
+              padding: '8px 12px', 
+              borderRadius: '15px',
+              background: msg.role === 'user' ? '#007BFF' : '#E9ECEF',
+              color: msg.role === 'user' ? '#fff' : '#333'
+            }}>
+              {msg.content}
+            </span>
+          </div>
+        ))}
+        {isLoading && <div style={{ textAlign: 'left', color: '#888' }}>Typing...</div>}
+      </div>
+
+      <form onSubmit={sendMessage} style={{ display: 'flex', borderTop: '1px solid #ddd' }}>
+        <input
+          type="text"
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          placeholder="Type a message..."
+          style={{ flex: 1, padding: '10px', border: 'none', outline: 'none' }}
+        />
+        <button 
+          type="submit" 
+          disabled={isLoading}
+          style={{ padding: '10px 20px', background: '#007BFF', color: '#fff', border: 'none', cursor: 'pointer' }}
+        >
+          Send
+        </button>
+      </form>
+    </div>
+  );
 };
 
-export default Chatbot;
+export default Chat;
