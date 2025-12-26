@@ -4,7 +4,9 @@ import { useNavigate } from 'react-router-dom';
 
 const JoinUsPage = () => {
   const navigate = useNavigate();
-  // State includes ALL fields from your original ju.html
+  // EXACT Webhook from your ju.html
+  const webhookUrl = "https://hook.us2.make.com/71zlo1hovhtyhcebw7t37terano9bhpf";
+
   const [formData, setFormData] = useState({
     applicantType: '', firstName: '', lastName: '', businessName: '',
     address: '', address2: '', city: '', state: '', zip: '',
@@ -31,20 +33,28 @@ const JoinUsPage = () => {
 
   const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const myForm = e.target;
     const formDataObj = new FormData(myForm);
     
-    fetch("/", {
-      method: "POST",
-      body: formDataObj
-    })
-      .then(() => {
+    // Explicitly sending to YOUR Make.com Webhook
+    try {
+      const response = await fetch(webhookUrl, {
+        method: "POST",
+        body: formDataObj
+      });
+
+      if (response.ok) {
         alert("Application Submitted! We will review your credentials.");
         navigate("/");
-      })
-      .catch(error => alert(error));
+      } else {
+        alert("There was an issue submitting your application. Please try again.");
+      }
+    } catch (error) {
+      console.error("Submission Error:", error);
+      alert("Network error. Please try again.");
+    }
   };
 
   return (
@@ -55,11 +65,12 @@ const JoinUsPage = () => {
         <p style={{ textAlign: 'center', marginBottom: '20px' }}>Independent Contractors & Vendors</p>
         
         <form name="provider-signup" onSubmit={handleSubmit}>
+          {/* Hidden inputs to help Make.com identify the form source */}
           <input type="hidden" name="form-name" value="provider-signup" />
+          <input type="hidden" name="source" value="react_join_us_page" />
           
-          {/* 1. Applicant Type (From original) */}
-          <div className="radio-container" style={{ textAlign: 'center', marginBottom: '20px' }}>
-            <label style={{ marginRight: '15px' }}>
+          <div className="radio-container">
+            <label>
               <input type="radio" name="applicantType" value="contractor" required onChange={handleChange} /> Independent Contractor
             </label>
             <label>
@@ -89,12 +100,10 @@ const JoinUsPage = () => {
           <div className="form-group"><label>Services Offered / Primary Products*</label><textarea name="servicesOffered" required onChange={handleChange} rows="3"></textarea></div>
           <div className="form-group"><label>Service Areas (Cities/Counties)*</label><input type="text" name="serviceAreas" required onChange={handleChange} /></div>
 
-          {/* File Uploads (Matching names from original) */}
           <div className="form-group"><label>Certifications/Licenses</label><input type="file" name="certificationsFile" /></div>
           <div className="form-group"><label>Proof of General Liability Insurance*</label><input type="file" name="insuranceFile" required /></div>
           <div className="form-group"><label>Catalog / Proof of Work (Optional)</label><input type="file" name="additionalFile" /></div>
 
-          {/* Checkbox Agreements */}
           <div className="checkbox-group">
             <label>
               <input type="checkbox" name="independentAcknowledgement" value="agreed" required />
@@ -108,7 +117,10 @@ const JoinUsPage = () => {
             </label>
           </div>
 
-          <button type="submit" className="btn">Submit Application</button>
+          {/* Center the button properly */}
+          <div className="form-button-wrapper">
+            <button type="submit" className="btn">Submit Application</button>
+          </div>
         </form>
       </div>
     </div>

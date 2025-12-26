@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 
 const HomeProjectForm = () => {
   const navigate = useNavigate();
+  const webhookUrl = "https://hook.us2.make.com/71zlo1hovhtyhcebw7t37terano9bhpf"; // Same backend
+
   const [formData, setFormData] = useState({
     firstName: '', lastName: '', address: '', address2: '', zip: '', city: '', state: '', 
     email: '', phone: '', projectName: '', budget: '', projectDescription: ''
@@ -24,25 +26,32 @@ const HomeProjectForm = () => {
 
   const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const myForm = e.target;
-    const formDataObj = new FormData(myForm); // Use FormData to handle file uploads
+    const formDataObj = new FormData(myForm);
     
-    fetch("/", {
-      method: "POST",
-      body: formDataObj
-    })
-      .then(() => {
+    try {
+      const response = await fetch(webhookUrl, {
+        method: "POST",
+        body: formDataObj
+      });
+      if (response.ok) {
         alert("Project Request Received! We will contact you shortly.");
         navigate("/");
-      })
-      .catch(error => alert(error));
+      } else {
+        alert("Error submitting project. Please try again.");
+      }
+    } catch (error) {
+      console.error(error);
+      alert("Network error.");
+    }
   };
 
   return (
     <form onSubmit={handleSubmit} className="project-form">
       <input type="hidden" name="form-name" value="home-project" />
+      <input type="hidden" name="source" value="react_home_project" />
       
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px' }}>
         <div className="form-group"><label>First Name*</label><input type="text" name="firstName" required onChange={handleChange} /></div>
@@ -81,7 +90,9 @@ const HomeProjectForm = () => {
         <input type="file" name="projectFileUpload" multiple accept=".pdf,.doc,.docx,.jpg,.png" />
       </div>
       
-      <button type="submit" className="btn">Submit Project Request</button>
+      <div className="form-button-wrapper">
+        <button type="submit" className="btn">Submit Project Request</button>
+      </div>
     </form>
   );
 };
