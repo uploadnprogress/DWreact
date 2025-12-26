@@ -462,3 +462,66 @@ nav.primary-nav-container > ul#primary-navigation li a:hover {
 }
 
 /* FORCE UPDATE: V1.5 - Chatbot and Hero Fix */
+
+/* =========================================
+   9. FINAL VISUAL FIXES (Services, Radios, Containers)
+   ========================================= */
+
+/* Fix Service Page "Missing Container" */
+.service-table {
+    background: white !important;
+    border: 1px solid #ddd !important;
+    border-radius: 8px !important;
+    padding: 30px !important;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1) !important;
+    max-width: 600px;
+    margin: 20px auto !important;
+    text-align: center;
+}
+.service-table ul {
+    display: inline-block;
+    text-align: left;
+    margin: 20px 0;
+    padding-left: 20px;
+}
+.service-table ul li {
+    margin-bottom: 8px;
+    list-style-type: disc;
+}
+
+/* Fix "Stacked" Radio Buttons on Join Us Page */
+.radio-container {
+    display: flex !important;
+    flex-direction: row !important;
+    justify-content: center !important;
+    gap: 20px !important;
+    width: 100% !important;
+    border: 2px solid var(--primary-blue);
+    padding: 15px;
+    border-radius: 8px;
+    background: #f9f9f9;
+}
+
+/* Force labels inside radio-container to be inline */
+.radio-container label {
+    display: flex !important;
+    align-items: center !important;
+    margin: 0 !important;
+    font-weight: normal !important;
+    cursor: pointer;
+    width: auto !important;
+}
+
+.radio-container input[type="radio"] {
+    margin-right: 8px !important;
+    margin-bottom: 0 !important;
+    width: auto !important;
+    height: auto !important;
+}
+
+/* Fix "Blown Up" Contact Page (Safety) */
+.contact-section {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}

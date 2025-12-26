@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Helmet } from 'react-helmet-async';
 
 const Contact = () => {
   // Hardcoded Make Webhook URL
@@ -9,16 +10,11 @@ const Contact = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setStatus('submitting');
-
     const form = e.target;
     const formData = new FormData(form);
 
     try {
-      const response = await fetch(webhookUrl, {
-        method: 'POST',
-        body: formData,
-      });
-
+      const response = await fetch(webhookUrl, { method: 'POST', body: formData });
       if (response.ok) {
         setStatus('success');
         form.reset(); 
@@ -32,53 +28,52 @@ const Contact = () => {
   };
 
   return (
-    <div className="contact-section">
-      <h2>Contact Us</h2>
+    <div className="form-section">
+      <Helmet>
+        <title>Contact Us | DoneWright Services</title>
+      </Helmet>
       
-      {status === 'success' ? (
-        <div className="success-message" style={{ padding: '20px', background: '#d4edda', color: '#155724', borderRadius: '5px' }}>
-          <h3>Message Sent!</h3>
-          <p>Thank you. We will get back to you shortly.</p>
-          <button onClick={() => setStatus(null)} style={{ marginTop: '10px' }}>Send another</button>
-        </div>
-      ) : (
-        <form onSubmit={handleSubmit}>
-          <div style={{ marginBottom: '15px' }}>
-            <label htmlFor="name" style={{ display: 'block', marginBottom: '5px' }}>Name:</label>
-            <input type="text" id="name" name="name" required style={{ width: '100%', padding: '8px' }} />
+      {/* Reusing the Form Container for a clean, centered white box */}
+      <div className="form-container">
+        <h2 className="section-title">Contact Us</h2>
+        
+        {status === 'success' ? (
+          <div className="success-message" style={{ padding: '20px', background: '#d4edda', color: '#155724', borderRadius: '5px', textAlign: 'center' }}>
+            <h3>Message Sent!</h3>
+            <p>Thank you. We will get back to you shortly.</p>
+            <button className="btn" onClick={() => setStatus(null)} style={{ marginTop: '10px' }}>Send another</button>
           </div>
+        ) : (
+          <form onSubmit={handleSubmit}>
+            <div className="form-group">
+              <label htmlFor="name">Name:</label>
+              <input type="text" id="name" name="name" required />
+            </div>
 
-          <div style={{ marginBottom: '15px' }}>
-            <label htmlFor="email" style={{ display: 'block', marginBottom: '5px' }}>Email:</label>
-            <input type="email" id="email" name="email" required style={{ width: '100%', padding: '8px' }} />
-          </div>
+            <div className="form-group">
+              <label htmlFor="email">Email:</label>
+              <input type="email" id="email" name="email" required />
+            </div>
 
-          <div style={{ marginBottom: '15px' }}>
-            <label htmlFor="message" style={{ display: 'block', marginBottom: '5px' }}>Message:</label>
-            <textarea id="message" name="message" required rows="5" style={{ width: '100%', padding: '8px' }}></textarea>
-          </div>
+            <div className="form-group">
+              <label htmlFor="message">Message:</label>
+              <textarea id="message" name="message" required rows="5"></textarea>
+            </div>
 
-          <input type="hidden" name="source" value="live_site_contact" />
+            <input type="hidden" name="source" value="live_site_contact" />
 
-          <button 
-            type="submit" 
-            disabled={status === 'submitting'}
-            style={{ 
-              padding: '10px 20px', 
-              backgroundColor: status === 'submitting' ? '#ccc' : '#007BFF', 
-              color: 'white', 
-              border: 'none', 
-              cursor: 'pointer' 
-            }}
-          >
-            {status === 'submitting' ? 'Sending...' : 'Send Message'}
-          </button>
-          
-          {status === 'error' && (
-            <p style={{ color: 'red', marginTop: '10px' }}>Error sending message. Please try again.</p>
-          )}
-        </form>
-      )}
+            <div className="form-button-wrapper">
+              <button type="submit" className="btn" disabled={status === 'submitting'}>
+                {status === 'submitting' ? 'Sending...' : 'Send Message'}
+              </button>
+            </div>
+            
+            {status === 'error' && (
+              <p style={{ color: 'red', marginTop: '10px', textAlign: 'center' }}>Error sending message. Please try again.</p>
+            )}
+          </form>
+        )}
+      </div>
     </div>
   );
 };
