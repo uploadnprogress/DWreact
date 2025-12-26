@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 
-const Chat = () => {
+const Chatbot = () => {
   // --- CONFIGURATION ---
-  // The working Make Webhook URL
+  // Your working Make Webhook URL
   const webhookUrl = "https://hook.us2.make.com/5wkom3twqpd7mx9vlcpdwhkfoxr84eho"; 
   // ---------------------
 
-  const [isOpen, setIsOpen] = useState(false); // Controls if chat is hidden or visible
+  const [isOpen, setIsOpen] = useState(false); // Controls if chat window is visible
   const [messages, setMessages] = useState([
     { role: 'assistant', content: 'Hello! How can I help you today?' }
   ]);
@@ -21,7 +21,7 @@ const Chat = () => {
     e.preventDefault();
     if (!input.trim()) return;
 
-    // 1. Add user message to UI
+    // 1. Add user message to UI immediately
     const userMessage = { role: 'user', content: input };
     setMessages((prev) => [...prev, userMessage]);
     setInput('');
@@ -31,15 +31,11 @@ const Chat = () => {
       // 2. Send to Make Webhook
       const response = await fetch(webhookUrl, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ message: input }),
       });
 
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
+      if (!response.ok) throw new Error('Network response was not ok');
 
       const data = await response.text(); 
       
@@ -56,7 +52,7 @@ const Chat = () => {
 
   return (
     <>
-      {/* 1. THE FLOATING BUTTON (Always Visible) */}
+      {/* 1. FLOATING BUTTON (Always Visible) */}
       <button 
         onClick={toggleChat}
         style={{
@@ -71,7 +67,7 @@ const Chat = () => {
           border: 'none',
           boxShadow: '0 4px 8px rgba(0,0,0,0.2)',
           cursor: 'pointer',
-          zIndex: 1000,
+          zIndex: 9999,
           fontSize: '24px',
           display: 'flex',
           alignItems: 'center',
@@ -81,7 +77,7 @@ const Chat = () => {
         {isOpen ? '✕' : '💬'}
       </button>
 
-      {/* 2. THE CHAT WINDOW (Only visible when isOpen is true) */}
+      {/* 2. CHAT WINDOW (Only visible when isOpen is true) */}
       {isOpen && (
         <div className="chat-window" style={{
           position: 'fixed',
@@ -92,7 +88,7 @@ const Chat = () => {
           backgroundColor: 'white',
           borderRadius: '10px',
           boxShadow: '0 5px 15px rgba(0,0,0,0.2)',
-          zIndex: 1000,
+          zIndex: 9999,
           display: 'flex',
           flexDirection: 'column',
           overflow: 'hidden',
@@ -156,4 +152,4 @@ const Chat = () => {
   );
 };
 
-export default Chat;
+export default Chatbot;
