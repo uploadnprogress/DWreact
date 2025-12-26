@@ -637,3 +637,79 @@ nav.primary-nav-container > ul#primary-navigation li a:hover {
         border-bottom: none; /* Cleaner look on mobile */
     }
 }
+
+/* =========================================
+   12. HOW IT WORKS / FAQ STYLING
+   ========================================= */
+
+/* The 3-Column Advantage Grid */
+.steps-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 30px;
+    margin-top: 30px;
+}
+
+.step-card {
+    background: #f8f9fa;
+    padding: 25px;
+    border-radius: 10px;
+    border-top: 5px solid var(--primary-blue);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    text-align: left;
+    transition: transform 0.2s ease;
+}
+
+.step-card:hover {
+    transform: translateY(-5px);
+}
+
+.step-card h3 {
+    color: var(--primary-blue);
+    margin-top: 0;
+    margin-bottom: 15px;
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+.step-card p {
+    font-size: 0.95rem;
+    color: #555;
+    line-height: 1.6;
+}
+
+/* FAQ Text Styling */
+.faq-content {
+    text-align: left;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.faq-category-title {
+    color: var(--primary-blue);
+    font-size: 1.5rem;
+    margin-top: 40px;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #eee;
+}
+
+.faq-group h3 {
+    font-size: 1.15rem;
+    color: #333;
+    margin-top: 25px;
+    margin-bottom: 10px;
+    font-weight: 600;
+}
+
+.faq-group p {
+    margin-bottom: 15px;
+    line-height: 1.7;
+    color: #444;
+}
+
+.faq-group a {
+    color: var(--primary-blue);
+    font-weight: 500;
+    text-decoration: underline;
+}
