@@ -15,7 +15,7 @@ import BusinessServicesPage from './pages/BusinessServicesPage.jsx';
 import PrivacyPolicyPage from './pages/PrivacyPolicyPage.jsx';
 import TermsOfServicePage from './pages/TermsOfServicePage.jsx';
 
-import './styles.css'; 
+import './styles.css'; // This is the ONLY css file you need now
 
 const router = createBrowserRouter([
   {
