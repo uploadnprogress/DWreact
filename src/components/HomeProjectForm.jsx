@@ -1,99 +1,161 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 
 const HomeProjectForm = () => {
-  const navigate = useNavigate();
-  const webhookUrl = "https://hook.us2.make.com/71zlo1hovhtyhcebw7t37terano9bhpf"; // Same backend
-
   const [formData, setFormData] = useState({
-    firstName: '', lastName: '', address: '', address2: '', zip: '', city: '', state: '', 
-    email: '', phone: '', projectName: '', budget: '', projectDescription: ''
+    firstName: '', lastName: '', email: '', phone: '',
+    address: '', address2: '', city: '', state: '', zip: '',
+    projectName: '', budget: '', projectDescription: '',
+    projectFile: null 
   });
 
-  const handleZipChange = async (e) => {
-    const zip = e.target.value;
-    setFormData({ ...formData, zip });
-    if (zip.length === 5) {
-      try {
-        const res = await fetch(`https://api.zippopotam.us/us/${zip}`);
-        if (res.ok) {
-          const data = await res.json();
-          setFormData(prev => ({ ...prev, city: data.places[0]['place name'], state: data.places[0]['state abbreviation'] }));
-        }
-      } catch (err) { console.error(err); }
-    }
+  const [showSuccessPopup, setShowSuccessPopup] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prevState => ({ ...prevState, [name]: value }));
   };
 
-  const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
+  const handleFileChange = (e) => {
+    setFormData(prevState => ({ ...prevState, projectFile: e.target.files[0] }));
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const myForm = e.target;
-    const formDataObj = new FormData(myForm);
-    
-    try {
-      const response = await fetch(webhookUrl, {
-        method: "POST",
-        body: formDataObj
-      });
-      if (response.ok) {
-        alert("Project Request Received! We will contact you shortly.");
-        navigate("/");
+    setIsSubmitting(true);
+
+    const webhookURL = "https://hook.us2.make.com/71zlo1hovhtyhcebw7t37terano9bhpf";
+    const data = new FormData();
+
+    // CRITICAL: This tells Make.com to route this to Email, not Box
+    data.append("form-name", "home-project");
+    data.append("source", "react_home_form");
+
+    // Append all other fields
+    Object.keys(formData).forEach(key => {
+      if (key === 'projectFile' && formData[key]) {
+        data.append('projectFileUpload', formData[key]); 
       } else {
-        alert("Error submitting project. Please try again.");
+        data.append(key, formData[key]);
+      }
+    });
+
+    try {
+      const response = await fetch(webhookURL, {
+        method: "POST",
+        body: data,
+      });
+
+      if (response.ok) {
+        setShowSuccessPopup(true); // Trigger Popup
+        // Clear form
+        setFormData({
+          firstName: '', lastName: '', email: '', phone: '',
+          address: '', address2: '', city: '', state: '', zip: '',
+          projectName: '', budget: '', projectDescription: '',
+          projectFile: null
+        });
+      } else {
+        alert("There was an error submitting your request.");
       }
     } catch (error) {
-      console.error(error);
-      alert("Network error.");
+      console.error("Error:", error);
+      alert("Network error. Please try again later.");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
   return (
-    <form onSubmit={handleSubmit} className="project-form">
-      <input type="hidden" name="form-name" value="home-project" />
-      <input type="hidden" name="source" value="react_home_project" />
-      
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px' }}>
-        <div className="form-group"><label>First Name*</label><input type="text" name="firstName" required onChange={handleChange} /></div>
-        <div className="form-group"><label>Last Name*</label><input type="text" name="lastName" required onChange={handleChange} /></div>
-      </div>
-      
-      <div className="form-group"><label>Street Address*</label><input type="text" name="address" required onChange={handleChange} /></div>
-      <div className="form-group"><label>Apartment, Unit, Suite</label><input type="text" name="address2" onChange={handleChange} /></div>
-      
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '15px' }}>
-        <div className="form-group"><label>ZIP*</label><input type="text" name="zip" required value={formData.zip} onChange={handleZipChange} maxLength="5" /></div>
-        <div className="form-group"><label>City*</label><input type="text" name="city" value={formData.city} readOnly /></div>
-        <div className="form-group"><label>State*</label><input type="text" name="state" value={formData.state} readOnly /></div>
-      </div>
+    <>
+      <form className="project-form" onSubmit={handleSubmit}>
+        <h3>Home Project Details</h3>
+        <div className="form-group-row">
+          <div className="form-group half">
+            <label>First Name *</label>
+            <input type="text" name="firstName" value={formData.firstName} onChange={handleChange} required />
+          </div>
+          <div className="form-group half">
+            <label>Last Name *</label>
+            <input type="text" name="lastName" value={formData.lastName} onChange={handleChange} required />
+          </div>
+        </div>
 
-      <div className="form-group"><label>Email*</label><input type="email" name="email" required onChange={handleChange} /></div>
-      <div className="form-group"><label>Phone</label><input type="tel" name="phone" onChange={handleChange} /></div>
-      
-      <div className="form-group"><label>Brief Project Title*</label><input type="text" name="projectName" placeholder="e.g. Kitchen Faucet Replacement" required onChange={handleChange} /></div>
+        <div className="form-group-row">
+          <div className="form-group half">
+            <label>Email *</label>
+            <input type="email" name="email" value={formData.email} onChange={handleChange} required />
+          </div>
+          <div className="form-group half">
+            <label>Phone *</label>
+            <input type="tel" name="phone" value={formData.phone} onChange={handleChange} required />
+          </div>
+        </div>
 
-      <div className="form-group">
-        <label>Estimated Budget*</label>
-        <select name="budget" required onChange={handleChange}>
-          <option value="">Select Budget</option>
-          <option value="0-1000">$0 - $1,000</option>
-          <option value="1000-5000">$1,000 - $5,000</option>
-          <option value="5000-10000">$5,000 - $10,000</option>
-          <option value="10000plus">$10,000+</option>
-        </select>
-      </div>
-      
-      <div className="form-group"><label>Project Description*</label><textarea name="projectDescription" required onChange={handleChange} rows="5"></textarea></div>
-      
-      <div className="form-group">
-        <label>Upload Files (Optional)</label>
-        <input type="file" name="projectFileUpload" multiple accept=".pdf,.doc,.docx,.jpg,.png" />
-      </div>
-      
-      <div className="form-button-wrapper">
-        <button type="submit" className="btn">Submit Project Request</button>
-      </div>
-    </form>
+        <div className="form-group">
+          <label>Address</label>
+          <input type="text" name="address" value={formData.address} onChange={handleChange} />
+        </div>
+
+        <div className="form-group-row">
+          <div className="form-group third">
+            <label>City</label>
+            <input type="text" name="city" value={formData.city} onChange={handleChange} />
+          </div>
+          <div className="form-group third">
+            <label>State</label>
+            <input type="text" name="state" value={formData.state} onChange={handleChange} />
+          </div>
+          <div className="form-group third">
+            <label>Zip</label>
+            <input type="text" name="zip" value={formData.zip} onChange={handleChange} />
+          </div>
+        </div>
+
+        <div className="form-group">
+          <label>Project Title *</label>
+          <input type="text" name="projectName" placeholder="e.g. Bathroom Tile Repair" value={formData.projectName} onChange={handleChange} required />
+        </div>
+
+        <div className="form-group">
+          <label>Estimated Budget</label>
+          <select name="budget" value={formData.budget} onChange={handleChange}>
+            <option value="">Select a Range</option>
+            <option value="Under $500">Under $500</option>
+            <option value="500-1000">$500 - $1,000</option>
+            <option value="1000-5000">$1,000 - $5,000</option>
+            <option value="5000+">$5,000+</option>
+          </select>
+        </div>
+
+        <div className="form-group">
+          <label>Description *</label>
+          <textarea name="projectDescription" rows="5" value={formData.projectDescription} onChange={handleChange} required></textarea>
+        </div>
+
+        <div className="form-group">
+          <label>Attach Photo (Optional)</label>
+          <input type="file" name="projectFile" onChange={handleFileChange} />
+        </div>
+
+        <button type="submit" className="submit-btn" disabled={isSubmitting}>
+          {isSubmitting ? "Sending..." : "Submit Home Request"}
+        </button>
+      </form>
+
+      {/* SUCCESS POPUP */}
+      {showSuccessPopup && (
+        <div className="popup-overlay">
+          <div className="popup-content">
+            <div className="popup-icon">✅</div>
+            <h2>Submission Received!</h2>
+            <p>Thanks for starting your home project with us.</p>
+            <p>We've sent a confirmation to <strong>{formData.email}</strong>.</p>
+            <button className="popup-close-btn" onClick={() => setShowSuccessPopup(false)}>Close</button>
+          </div>
+        </div>
+      )}
+    </>
   );
 };
 

@@ -1,97 +1,154 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 
 const BusinessProjectForm = () => {
-  const navigate = useNavigate();
-  const webhookUrl = "https://hook.us2.make.com/71zlo1hovhtyhcebw7t37terano9bhpf";
-
   const [formData, setFormData] = useState({
-    companyName: '', firstName: '', lastName: '', 
-    address: '', address2: '', zip: '', city: '', state: '', 
-    email: '', phone: '', budget: ''
+    firstName: '', lastName: '', email: '', phone: '',
+    companyName: '',
+    address: '', city: '', state: '', zip: '',
+    projectName: '', budget: '', projectDescription: '',
+    projectFile: null 
   });
 
-  const handleZipChange = async (e) => {
-    const zip = e.target.value;
-    setFormData({ ...formData, zip });
-    if (zip.length === 5) {
-      try {
-        const res = await fetch(`https://api.zippopotam.us/us/${zip}`);
-        if (res.ok) {
-          const data = await res.json();
-          setFormData(prev => ({ 
-            ...prev, 
-            city: data.places[0]['place name'], 
-            state: data.places[0]['state abbreviation'] 
-          }));
-        }
-      } catch (err) { console.error(err); }
-    }
+  const [showSuccessPopup, setShowSuccessPopup] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prevState => ({ ...prevState, [name]: value }));
   };
 
-  const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
+  const handleFileChange = (e) => {
+    setFormData(prevState => ({ ...prevState, projectFile: e.target.files[0] }));
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const myForm = e.target;
-    const formDataObj = new FormData(myForm);
-    
-    try {
-      const response = await fetch(webhookUrl, {
-        method: "POST",
-        body: formDataObj
-      });
-      if (response.ok) {
-        alert("Business Request Received! We will be in touch shortly.");
-        navigate("/");
+    setIsSubmitting(true);
+
+    const webhookURL = "https://hook.us2.make.com/71zlo1hovhtyhcebw7t37terano9bhpf";
+    const data = new FormData();
+
+    // CRITICAL: Route to Email Path
+    data.append("form-name", "business-project");
+    data.append("source", "react_business_form");
+
+    Object.keys(formData).forEach(key => {
+      if (key === 'projectFile' && formData[key]) {
+        data.append('projectFileUpload', formData[key]); 
       } else {
-        alert("Error submitting request.");
+        data.append(key, formData[key]);
+      }
+    });
+
+    try {
+      const response = await fetch(webhookURL, {
+        method: "POST",
+        body: data,
+      });
+
+      if (response.ok) {
+        setShowSuccessPopup(true);
+        setFormData({
+          firstName: '', lastName: '', email: '', phone: '', companyName: '',
+          address: '', city: '', state: '', zip: '',
+          projectName: '', budget: '', projectDescription: '',
+          projectFile: null
+        });
+      } else {
+        alert("Error submitting form.");
       }
     } catch (error) {
-      console.error(error);
+      console.error("Error:", error);
       alert("Network error.");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
   return (
-    <form onSubmit={handleSubmit} className="project-form">
-      <input type="hidden" name="form-name" value="business-project" />
-      <input type="hidden" name="source" value="react_business_project" />
-      
-      <div className="form-group"><label>Company Name*</label><input type="text" name="companyName" required onChange={handleChange} /></div>
-      
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px' }}>
-        <div className="form-group"><label>Contact First Name*</label><input type="text" name="firstName" required onChange={handleChange} /></div>
-        <div className="form-group"><label>Contact Last Name*</label><input type="text" name="lastName" required onChange={handleChange} /></div>
-      </div>
-      
-      <div className="form-group"><label>Office Street Address*</label><input type="text" name="address" required onChange={handleChange} /></div>
-      <div className="form-group"><label>Suite / Unit / Floor</label><input type="text" name="address2" onChange={handleChange} /></div>
-      
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '15px' }}>
-        <div className="form-group"><label>ZIP*</label><input type="text" name="zip" required value={formData.zip} onChange={handleZipChange} maxLength="5" /></div>
-        <div className="form-group"><label>City*</label><input type="text" name="city" value={formData.city} readOnly /></div>
-        <div className="form-group"><label>State*</label><input type="text" name="state" value={formData.state} readOnly /></div>
-      </div>
-      
-      <div className="form-group"><label>Work Email*</label><input type="email" name="email" required onChange={handleChange} /></div>
-      <div className="form-group"><label>Work Phone</label><input type="tel" name="phone" onChange={handleChange} /></div>
+    <>
+      <form className="project-form" onSubmit={handleSubmit}>
+        <h3>Business Project Details</h3>
+        <div className="form-group">
+          <label>Company Name</label>
+          <input type="text" name="companyName" value={formData.companyName} onChange={handleChange} />
+        </div>
 
-      <div className="form-group">
-        <label>Estimated Budget*</label>
-        <select name="budget" required onChange={handleChange}>
-          <option value="">Select range</option>
-          <option value="under-500">Under $500</option>
-          <option value="500-2000">$500 - $2,000</option>
-          <option value="2000-5000">$2,000 - $5,000</option>
-          <option value="5000-plus">$5,000+</option>
-        </select>
-      </div>
-      
-      <div className="form-button-wrapper">
-        <button type="submit" className="btn">Submit Business Request</button>
-      </div>
-    </form>
+        <div className="form-group-row">
+          <div className="form-group half">
+            <label>Contact First Name *</label>
+            <input type="text" name="firstName" value={formData.firstName} onChange={handleChange} required />
+          </div>
+          <div className="form-group half">
+            <label>Contact Last Name *</label>
+            <input type="text" name="lastName" value={formData.lastName} onChange={handleChange} required />
+          </div>
+        </div>
+
+        <div className="form-group-row">
+          <div className="form-group half">
+            <label>Email *</label>
+            <input type="email" name="email" value={formData.email} onChange={handleChange} required />
+          </div>
+          <div className="form-group half">
+            <label>Phone *</label>
+            <input type="tel" name="phone" value={formData.phone} onChange={handleChange} required />
+          </div>
+        </div>
+
+        <div className="form-group">
+          <label>Business Address</label>
+          <input type="text" name="address" value={formData.address} onChange={handleChange} />
+        </div>
+
+        <div className="form-group-row">
+            <div className="form-group third">
+                <label>City</label>
+                <input type="text" name="city" value={formData.city} onChange={handleChange} />
+            </div>
+            <div className="form-group third">
+                <label>State</label>
+                <input type="text" name="state" value={formData.state} onChange={handleChange} />
+            </div>
+            <div className="form-group third">
+                <label>Zip</label>
+                <input type="text" name="zip" value={formData.zip} onChange={handleChange} />
+            </div>
+        </div>
+
+        <div className="form-group">
+          <label>Project Title *</label>
+          <input type="text" name="projectName" value={formData.projectName} onChange={handleChange} required />
+        </div>
+
+        <div className="form-group">
+          <label>Description *</label>
+          <textarea name="projectDescription" rows="5" value={formData.projectDescription} onChange={handleChange} required></textarea>
+        </div>
+
+        <div className="form-group">
+          <label>Attach Document (RFP/Photos)</label>
+          <input type="file" name="projectFile" onChange={handleFileChange} />
+        </div>
+
+        <button type="submit" className="submit-btn" disabled={isSubmitting}>
+          {isSubmitting ? "Sending..." : "Submit Business Request"}
+        </button>
+      </form>
+
+      {/* SUCCESS POPUP */}
+      {showSuccessPopup && (
+        <div className="popup-overlay">
+          <div className="popup-content">
+            <div className="popup-icon">✅</div>
+            <h2>Request Sent!</h2>
+            <p>We have received your business inquiry.</p>
+            <p>A coordinator will contact <strong>{formData.email}</strong> shortly.</p>
+            <button className="popup-close-btn" onClick={() => setShowSuccessPopup(false)}>Close</button>
+          </div>
+        </div>
+      )}
+    </>
   );
 };
 

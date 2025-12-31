@@ -712,3 +712,220 @@ nav.primary-nav-container > ul#primary-navigation li a:hover {
     font-weight: 500;
     text-decoration: underline;
 }
+
+/* =========================================
+   13. SUCCESS POPUP STYLING
+   ========================================= */
+.popup-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+.popup-content {
+    background: white;
+    padding: 40px;
+    border-radius: 12px;
+    text-align: center;
+    max-width: 450px;
+    width: 90%;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    animation: slideUp 0.3s ease-out;
+}
+
+.popup-icon {
+    font-size: 3rem;
+    margin-bottom: 20px;
+}
+
+.popup-content h2 {
+    color: var(--primary-blue);
+    margin-bottom: 15px;
+    font-size: 1.8rem;
+}
+
+.popup-content p {
+    color: #555;
+    margin-bottom: 10px;
+    line-height: 1.5;
+}
+
+.popup-close-btn {
+    margin-top: 25px;
+    background-color: var(--primary-blue);
+    color: white;
+    border: none;
+    padding: 12px 30px;
+    border-radius: 6px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.popup-close-btn:hover {
+    background-color: var(--secondary-blue);
+}
+
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+/* =========================================
+   14. BUTTON CENTERING FIX
+   ========================================= */
+
+/* Targets the submit button specifically to center it */
+button.submit-btn {
+    display: block;        /* Makes it a block element so margins work */
+    margin-left: auto;     /* Pushes from the left */
+    margin-right: auto;    /* Pushes from the right */
+    width: fit-content;    /* Only as wide as the text needs to be (optional) */
+    min-width: 250px;      /* Ensures it's not too small */
+}
+
+/* Optional: If you want it specifically for the Provider page only */
+.provider-form .submit-btn {
+    margin-top: 30px;      /* Adds a little space above it */
+}
+
+/* =========================================
+   15. CHATBOT WIDGET
+   ========================================= */
+
+/* The Floating Button */
+.chat-toggle-btn {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 60px;
+    height: 60px;
+    background-color: var(--primary-blue);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    font-size: 2rem;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    z-index: 9999;
+    transition: transform 0.3s, background-color 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.chat-toggle-btn:hover {
+    transform: scale(1.1);
+    background-color: var(--secondary-blue);
+}
+
+.chat-toggle-btn.open {
+    transform: rotate(90deg);
+    background-color: #333;
+}
+
+/* The Chat Window */
+.chat-window {
+    position: fixed;
+    bottom: 100px;
+    right: 30px;
+    width: 350px;
+    height: 450px;
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    z-index: 9998;
+    animation: slideUp 0.3s ease-out;
+    border: 1px solid #eee;
+}
+
+.chat-header {
+    background-color: var(--primary-blue);
+    color: white;
+    padding: 15px;
+    text-align: center;
+    font-weight: bold;
+}
+
+.chat-messages {
+    flex: 1;
+    padding: 15px;
+    overflow-y: auto;
+    background-color: #f9f9f9;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* Bubbles */
+.message {
+    display: flex;
+}
+
+.message.user {
+    justify-content: flex-end;
+}
+
+.message.bot {
+    justify-content: flex-start;
+}
+
+.message-bubble {
+    max-width: 80%;
+    padding: 10px 14px;
+    border-radius: 12px;
+    font-size: 0.9rem;
+    line-height: 1.4;
+}
+
+.message.user .message-bubble {
+    background-color: var(--primary-blue);
+    color: white;
+    border-bottom-right-radius: 2px;
+}
+
+.message.bot .message-bubble {
+    background-color: #e0e0e0;
+    color: #333;
+    border-bottom-left-radius: 2px;
+}
+
+.typing {
+    font-style: italic;
+    color: #888;
+}
+
+/* Input Area */
+.chat-input-area {
+    display: flex;
+    border-top: 1px solid #ddd;
+    padding: 10px;
+    background: white;
+}
+
+.chat-input-area input {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 20px;
+    outline: none;
+    font-size: 0.9rem;
+}
+
+.chat-input-area button {
+    background: none;
+    border: none;
+    color: var(--primary-blue);
+    font-size: 1.5rem;
+    margin-left: 10px;
+    cursor: pointer;
+}
