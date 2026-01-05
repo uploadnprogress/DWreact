@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
-import '../styles.css'; // We will add styles next
+import '../styles.css';
 
-const ChatBot = () => {
+const Chatbot = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState([
     { sender: 'bot', text: 'Hi! I am the DoneWright Assistant. How can I help you today?' }
@@ -20,34 +20,41 @@ const ChatBot = () => {
     scrollToBottom();
   }, [messages, isOpen]);
 
+  // THIS IS THE UPDATED FUNCTION WITHOUT SYNTAX ERRORS
   const handleSend = async (e) => {
     e.preventDefault();
     if (!input.trim()) return;
 
     const userMessage = input;
+    // Add user message to UI immediately
     setMessages(prev => [...prev, { sender: 'user', text: userMessage }]);
     setInput('');
     setIsTyping(true);
 
-    // REPLACE THIS WITH YOUR NEW MAKE WEBHOOK URL
-    const webhookURL = "YOUR_NEW_MAKE_WEBHOOK_URL_HERE";
+    // EXACT Webhook URL from your JoinUsPage
+    const webhookURL = "https://hook.us2.make.com/71zlo1hovhtyhcebw7t37terano9bhpf";
 
     try {
       const response = await fetch(webhookURL, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: userMessage })
+        // We add action: 'chat' so Make.com can tell the difference
+        body: JSON.stringify({ 
+            message: userMessage, 
+            action: 'chat' 
+        })
       });
 
       if (response.ok) {
+        // Since we are sending raw text back from Make, we use .text()
         const botAnswer = await response.text();
         setMessages(prev => [...prev, { sender: 'bot', text: botAnswer }]);
       } else {
-        setMessages(prev => [...prev, { sender: 'bot', text: "I'm having trouble connecting right now. Please email us!" }]);
+        setMessages(prev => [...prev, { sender: 'bot', text: "I'm having trouble connecting right now." }]);
       }
     } catch (error) {
       console.error("Chat Error:", error);
-      setMessages(prev => [...prev, { sender: 'bot', text: "Network error. Please try again." }]);
+      setMessages(prev => [...prev, { sender: 'bot', text: "Network error." }]);
     } finally {
       setIsTyping(false);
     }
@@ -55,12 +62,10 @@ const ChatBot = () => {
 
   return (
     <>
-      {/* Floating Button */}
       <button className={`chat-toggle-btn ${isOpen ? 'open' : ''}`} onClick={toggleChat}>
         {isOpen ? '✕' : '💬'}
       </button>
 
-      {/* Chat Window */}
       {isOpen && (
         <div className="chat-window">
           <div className="chat-header">
@@ -92,4 +97,4 @@ const ChatBot = () => {
   );
 };
 
-export default ChatBot;
+export default Chatbot;
