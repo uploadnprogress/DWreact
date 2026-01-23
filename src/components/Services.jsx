@@ -14,8 +14,7 @@ const Services = () => {
           {/* Residential / Home Tile */}
           <div className="service-card">
             <div className="card-image-wrapper">
-              {/* If using an img tag, ensure descriptive alt text for SEO */}
-              <div className="service-icon-placeholder" role="img" aria-label="Home interior with assembled furniture">🏠</div>
+              <div className="service-icon-placeholder" role="img" aria-label="Home interior">🏠</div>
             </div>
             <div className="card-content">
               <h3>Residential Services</h3>
@@ -41,7 +40,7 @@ const Services = () => {
           {/* Commercial / Business Tile */}
           <div className="service-card">
             <div className="card-image-wrapper">
-              <div className="service-icon-placeholder" role="img" aria-label="Modern office space with workstations">🏢</div>
+              <div className="service-icon-placeholder" role="img" aria-label="Office space">🏢</div>
             </div>
             <div className="card-content">
               <h3>Business Services</h3>
@@ -64,6 +63,18 @@ const Services = () => {
             </div>
           </div>
         </div>
+
+        {/* === ADDED: FOOTER SECTION FROM HOW IT WORKS === */}
+        <div style={{ textAlign: 'center', marginTop: '80px', padding: '30px', background: '#f0f8ff', borderRadius: '8px' }}>
+            <h3>Ready to get started?</h3>
+            <p style={{ marginBottom: '20px' }}>Whether you need a pro or want to join the network, we make it easy.</p>
+            <div style={{ display: 'flex', gap: '20px', justifyContent: 'center', flexWrap: 'wrap' }}>
+            <Link to="/start-project" className="btn">Start a Project</Link>
+            {/* Using explicit hex code for blue to ensure consistency */}
+            <Link to="/join-network" className="btn" style={{ background: 'transparent', border: '2px solid #007bff', color: '#007bff' }}>Join Network</Link>
+            </div>
+        </div>
+
       </div>
     </section>
   );

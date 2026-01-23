@@ -12,7 +12,7 @@ const BusinessProjectForm = () => {
   const [showSuccessPopup, setShowSuccessPopup] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // 1. THE MISSING ZIP LOGIC
+  // ZIP LOGIC
   const handleZipChange = async (e) => {
     const zip = e.target.value;
     setFormData(prevState => ({ ...prevState, zip: zip }));
@@ -131,7 +131,6 @@ const BusinessProjectForm = () => {
             </div>
             <div className="form-group third">
                 <label>Zip</label>
-                {/* 2. ATTACH THE ZIP HANDLER HERE */}
                 <input type="text" name="zip" value={formData.zip} onChange={handleZipChange} maxLength="5" />
             </div>
         </div>
@@ -152,7 +151,8 @@ const BusinessProjectForm = () => {
         </div>
 
         <div className="form-button-wrapper">
-            <button type="submit" className="submit-btn" disabled={isSubmitting}>
+            {/* ADDED 'btn' CLASS HERE */}
+            <button type="submit" className="btn submit-btn" disabled={isSubmitting}>
             {isSubmitting ? "Sending..." : "Submit Business Request"}
             </button>
         </div>

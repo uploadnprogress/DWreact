@@ -11,13 +11,11 @@ const HomeProjectForm = () => {
   const [showSuccessPopup, setShowSuccessPopup] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // 1. THE MISSING ZIP LOGIC (Works on Mobile & Desktop)
+  // ZIP LOGIC
   const handleZipChange = async (e) => {
     const zip = e.target.value;
-    // Update the zip field immediately
     setFormData(prevState => ({ ...prevState, zip: zip }));
 
-    // If 5 digits, fetch the City/State
     if (zip.length === 5) {
       try {
         const res = await fetch(`https://api.zippopotam.us/us/${zip}`);
@@ -127,7 +125,6 @@ const HomeProjectForm = () => {
           </div>
           <div className="form-group third">
             <label>Zip</label>
-            {/* 2. ATTACH THE ZIP HANDLER HERE */}
             <input type="text" name="zip" value={formData.zip} onChange={handleZipChange} maxLength="5" />
           </div>
         </div>
@@ -159,7 +156,8 @@ const HomeProjectForm = () => {
         </div>
 
         <div className="form-button-wrapper">
-            <button type="submit" className="submit-btn" disabled={isSubmitting}>
+            {/* ADDED 'btn' CLASS HERE */}
+            <button type="submit" className="btn submit-btn" disabled={isSubmitting}>
             {isSubmitting ? "Sending..." : "Submit Home Request"}
             </button>
         </div>
