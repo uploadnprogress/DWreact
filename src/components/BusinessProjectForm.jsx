@@ -12,6 +12,26 @@ const BusinessProjectForm = () => {
   const [showSuccessPopup, setShowSuccessPopup] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  // 1. THE MISSING ZIP LOGIC
+  const handleZipChange = async (e) => {
+    const zip = e.target.value;
+    setFormData(prevState => ({ ...prevState, zip: zip }));
+
+    if (zip.length === 5) {
+      try {
+        const res = await fetch(`https://api.zippopotam.us/us/${zip}`);
+        if (res.ok) {
+          const data = await res.json();
+          setFormData(prevState => ({ 
+            ...prevState, 
+            city: data.places[0]['place name'], 
+            state: data.places[0]['state abbreviation'] 
+          }));
+        }
+      } catch (err) { console.error("Zip Error:", err); }
+    }
+  };
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prevState => ({ ...prevState, [name]: value }));
@@ -28,7 +48,6 @@ const BusinessProjectForm = () => {
     const webhookURL = "https://hook.us2.make.com/71zlo1hovhtyhcebw7t37terano9bhpf";
     const data = new FormData();
 
-    // CRITICAL: Route to Email Path
     data.append("form-name", "business-project");
     data.append("source", "react_business_form");
 
@@ -112,7 +131,8 @@ const BusinessProjectForm = () => {
             </div>
             <div className="form-group third">
                 <label>Zip</label>
-                <input type="text" name="zip" value={formData.zip} onChange={handleChange} />
+                {/* 2. ATTACH THE ZIP HANDLER HERE */}
+                <input type="text" name="zip" value={formData.zip} onChange={handleZipChange} maxLength="5" />
             </div>
         </div>
 
@@ -131,9 +151,11 @@ const BusinessProjectForm = () => {
           <input type="file" name="projectFile" onChange={handleFileChange} />
         </div>
 
-        <button type="submit" className="submit-btn" disabled={isSubmitting}>
-          {isSubmitting ? "Sending..." : "Submit Business Request"}
-        </button>
+        <div className="form-button-wrapper">
+            <button type="submit" className="submit-btn" disabled={isSubmitting}>
+            {isSubmitting ? "Sending..." : "Submit Business Request"}
+            </button>
+        </div>
       </form>
 
       {/* SUCCESS POPUP */}

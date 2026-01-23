@@ -929,3 +929,41 @@ button.submit-btn {
     margin-left: 10px;
     cursor: pointer;
 }
+
+/* =========================================
+   16. GLOBAL BUTTON FIXES
+   ========================================= */
+
+/* 1. Ensure the wrapper always centers the button */
+.form-button-wrapper {
+    display: flex;
+    justify-content: center; /* Horizontally center */
+    align-items: center;
+    width: 100%;
+    margin-top: 30px;        /* Spacing above button */
+    margin-bottom: 20px;     /* Spacing below button */
+}
+
+/* 2. Force the "DoneWright Blue" and Styling on the specific class */
+.submit-btn {
+    /* If your .btn class isn't loading, this forces the style */
+    background-color: #007bff; /* Standard Blue - Change to your specific Hex Code if different */
+    color: #ffffff;
+    border: none;
+    padding: 12px 40px;      /* Wide, comfortable padding */
+    font-size: 16px;
+    font-weight: 600;
+    border-radius: 4px;      /* Slight rounded corners */
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    
+    /* Ensure it doesn't stretch too wide or shrink too small */
+    width: auto;
+    min-width: 200px; 
+}
+
+/* Hover Effect */
+.submit-btn:hover {
+    background-color: #0056b3; /* Slightly darker blue on hover */
+    transform: translateY(-1px);
+}
