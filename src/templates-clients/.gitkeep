@@ -1,0 +1,5 @@
+# This folder stores client-specific template configurations
+# Each client gets their own subfolder with a config.js file
+# Example: src/templates-clients/client-name/config.js
+# 
+# This folder is gitignored to keep client data private

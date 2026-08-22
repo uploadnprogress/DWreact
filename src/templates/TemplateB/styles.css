@@ -1,0 +1,19 @@
+/* src/templates/TemplateB/styles.css */
+.template-b {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+}
+
+.tb-nav {
+  transition: box-shadow 0.3s ease;
+}
+
+@media (max-width: 768px) {
+  .tb-nav div {
+    flex-direction: column;
+    align-items: center !important;
+    text-align: center;
+  }
+  .tb-nav div div:last-child {
+    justify-content: center;
+  }
+}
