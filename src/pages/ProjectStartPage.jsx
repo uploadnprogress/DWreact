@@ -6,13 +6,19 @@ import BusinessProjectForm from '../components/BusinessProjectForm';
 
 function ProjectStartPage() {
   const location = useLocation();
-  const [formType, setFormType] = useState('');
+  // Default to 'home' so the user sees the form immediately
+  const [formType, setFormType] = useState('home');
 
   useEffect(() => {
     if (location.state?.type) {
       setFormType(location.state.type);
     }
   }, [location]);
+
+  // The logic to switch the state when a button is clicked
+  const handleTypeChange = (e) => {
+    setFormType(e.target.value);
+  };
 
   return (
     <>
@@ -23,6 +29,7 @@ function ProjectStartPage() {
         <div className="form-container">
           <h1 className="section-title">Start a New Project</h1>
           
+          {/* Radio Buttons for Toggling */}
           <div className="radio-container">
             <label>
               <input 
@@ -30,7 +37,7 @@ function ProjectStartPage() {
                 name="projectType" 
                 value="home" 
                 checked={formType === 'home'} 
-                onChange={() => setFormType('home')} 
+                onChange={handleTypeChange} 
               /> Home Project
             </label>
             <label>
@@ -39,15 +46,15 @@ function ProjectStartPage() {
                 name="projectType" 
                 value="business" 
                 checked={formType === 'business'} 
-                onChange={() => setFormType('business')} 
+                onChange={handleTypeChange} 
               /> Business Project
             </label>
           </div>
 
+          {/* Conditional Rendering based on the Radio Selection */}
           {formType === 'home' && <HomeProjectForm />}
           {formType === 'business' && <BusinessProjectForm />}
           
-          {!formType && <p style={{textAlign: 'center', marginTop: '20px'}}>Please select a project type above to see the request form.</p>}
         </div>
       </div>
     </>
