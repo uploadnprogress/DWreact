@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 
 const Header = () => {
   const [isNavActive, setIsNavActive] = useState(false);
-
+  
   return (
     <header className="main-header">
       <div className="header-content">
@@ -29,6 +29,14 @@ const Header = () => {
           <ul id="primary-navigation" className={isNavActive ? 'nav-active' : ''}>
             <li><Link to="/home-services" onClick={() => setIsNavActive(false)}>Home Services</Link></li>
             <li><Link to="/business-services" onClick={() => setIsNavActive(false)}>Business Services</Link></li>
+            
+            {/* 👉 THE NEW MEMBERSHIP LINK */}
+            <li>
+              <Link to="/standard" style={{ fontWeight: 'bold', color: '#007bff' }} onClick={() => setIsNavActive(false)}>
+                Membership
+              </Link>
+            </li>
+            
             <li><Link to="/services" onClick={() => setIsNavActive(false)}>Service Network</Link></li>
             <li><Link to="/faq" onClick={() => setIsNavActive(false)}>How It Works</Link></li>
             <li><Link to="/contacts" onClick={() => setIsNavActive(false)}>Contact</Link></li>

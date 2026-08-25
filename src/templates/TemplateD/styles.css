@@ -1,0 +1,17 @@
+/* src/templates/TemplateD/styles.css */
+.template-d {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+}
+
+@media (max-width: 768px) {
+  .template-d header h1 {
+    font-size: 2rem !important;
+  }
+  .template-d header p {
+    font-size: 1rem !important;
+  }
+  .template-d .booking-form {
+    margin: 0 10px 30px !important;
+    padding: 15px !important;
+  }
+}

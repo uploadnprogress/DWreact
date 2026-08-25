@@ -967,3 +967,60 @@ button.submit-btn {
     background-color: #0056b3; /* Slightly darker blue on hover */
     transform: translateY(-1px);
 }
+
+/* =========================================
+   ACCESSIBILITY: Focus Indicators
+   ========================================= */
+*:focus-visible {
+  outline: 3px solid #0047ab !important;
+  outline-offset: 2px !important;
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+[role="button"]:focus-visible,
+[role="tab"]:focus-visible {
+  outline: 3px solid #0047ab !important;
+  outline-offset: 2px !important;
+}
+
+/* =========================================
+   ACCESSIBILITY: Reduced Motion
+   ========================================= */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* =========================================
+   ACCESSIBILITY: Screen Reader Only
+   ========================================= */
+.sr-only {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+/* =========================================
+   ACCESSIBILITY: High Contrast Focus
+   ========================================= */
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  border-color: #0047ab !important;
+  box-shadow: 0 0 0 3px rgba(0, 71, 171, 0.25) !important;
+}
