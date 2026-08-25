@@ -1,0 +1,76 @@
+{
+  "templates": [
+    {
+      "id": "template-a",
+      "name": "Booking Portal",
+      "description": "Single-page booking form with services, pricing, and deposit collection. Perfect for cleaners, movers, and handymen.",
+      "emoji": "📋",
+      "bestFor": "Cleaners, Movers, Handymen",
+      "setupPrice": 497,
+      "monthlyPrice": 97,
+      "features": [
+        "Custom branding (logo, colors)",
+        "3-5 service cards with flat-rate pricing",
+        "Full booking form with deposit collection",
+        "Helper toggle & space prep options",
+        "Mobile-responsive design",
+        "Stripe integration for deposits"
+      ],
+      "demoUrl": "/demo/template-a"
+    },
+    {
+      "id": "template-b",
+      "name": "Full Service Site",
+      "description": "Complete multi-page website with home, services, about, and contact pages. Perfect for contractors and home service pros.",
+      "emoji": "🏠",
+      "bestFor": "Contractors, Home Service Pros",
+      "setupPrice": 997,
+      "monthlyPrice": 147,
+      "features": [
+        "Everything in Booking Portal",
+        "4-5 page website (Home, Services, About, Contact)",
+        "SEO meta tags for each page",
+        "Custom domain support",
+        "Google Maps embed",
+        "Testimonial section"
+      ],
+      "demoUrl": "/demo/template-b"
+    },
+    {
+      "id": "template-c",
+      "name": "Product Catalog",
+      "description": "Full inventory system with categories, product grid, and cart checkout. Perfect for event rentals and vendors.",
+      "emoji": "📦",
+      "bestFor": "Event Rentals, Vendors",
+      "setupPrice": 997,
+      "monthlyPrice": 147,
+      "features": [
+        "Product catalog with categories",
+        "Shopping cart with quantity management",
+        "Inventory tracking",
+        "Secure checkout with deposits",
+        "Image gallery for each product",
+        "Mobile-friendly"
+      ],
+      "demoUrl": "/demo/template-c"
+    },
+    {
+      "id": "template-d",
+      "name": "Appointment Booking",
+      "description": "Calendar-based booking system with date/time selection. Perfect for consultants, coaches, and therapists.",
+      "emoji": "📅",
+      "bestFor": "Consultants, Coaches, Therapists",
+      "setupPrice": 497,
+      "monthlyPrice": 97,
+      "features": [
+        "Service selection with pricing",
+        "Date and time picker",
+        "Appointment confirmation",
+        "Stripe integration",
+        "Simple and clean design",
+        "Mobile-friendly"
+      ],
+      "demoUrl": "/demo/template-d"
+    }
+  ]
+}
