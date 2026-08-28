@@ -36,23 +36,18 @@ const Chatbot = () => {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
-      // Parse the JSON response
-      const data = await response.json();
-      
-      console.log("Full response from Make:", data);
-
-      // Extract the reply – handles both string and object responses
+      // Try to parse as JSON first
       let reply = "I received your message!";
-      if (typeof data === 'string') {
-        reply = data;
-      } else if (data.response) {
-        reply = data.response;
-      } else if (data.text) {
-        reply = data.text;
-      } else if (data.Result) {
-        reply = data.Result;
-      } else if (data.result) {
-        reply = data.result;
+      const contentType = response.headers.get('content-type');
+      
+      if (contentType && contentType.includes('application/json')) {
+        const data = await response.json();
+        console.log("JSON Response:", data);
+        reply = data.response || data.text || data.Result || data.message || JSON.stringify(data);
+      } else {
+        const text = await response.text();
+        console.log("Text Response:", text);
+        reply = text || "I received your message!";
       }
 
       setMessages((prev) => [...prev, { role: 'assistant', content: reply }]);
