@@ -2,15 +2,11 @@ import React, { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 
 const ContactPage = () => {
-  // Hardcoded Make Webhook URL
-  const webhookUrl = "https://hook.us2.make.com/71zlo1hovhtyhcebw7t37terano9bhpf";
-
-  const [status, setStatus] = useState(null); // 'submitting', 'success', 'error'
+const webhookUrl = "https://hook.us2.make.com/71zlo1hovhtyhcebw7t37terano9bhpf";  const [status, setStatus] = useState(null);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setStatus('submitting');
-
     const form = e.target;
     const formData = new FormData(form);
 
@@ -19,7 +15,6 @@ const ContactPage = () => {
         method: 'POST',
         body: formData,
       });
-
       if (response.ok) {
         setStatus('success');
         form.reset();
@@ -41,7 +36,6 @@ const ContactPage = () => {
       <div className="contact-section" style={{ maxWidth: '600px', margin: '0 auto', padding: '20px' }}>
         <h1 className="section-title" style={{ textAlign: 'center' }}>Contact Us</h1>
         
-        {/* CALL BUTTON */}
         <div style={{ 
           background: '#e8f5e9', 
           padding: '20px', 
@@ -118,61 +112,6 @@ const ContactPage = () => {
         )}
       </div>
     </>
-  );
-};
-
-export default ContactPage;
->>>>>>> 6d035b70184908aaff21b118d39cf3f86063c40c
-
-          <input type="hidden" name="source" value="live_site_contact" />
-
-<<<<<<< HEAD
-          <button 
-            type="submit" 
-            disabled={status === 'submitting'}
-            style={{ 
-              padding: '10px 20px', 
-              backgroundColor: status === 'submitting' ? '#ccc' : '#007BFF', 
-              color: 'white', 
-              border: 'none', 
-              cursor: 'pointer' 
-            }}
-          >
-            {status === 'submitting' ? 'Sending...' : 'Send Message'}
-          </button>
-          
-          {status === 'error' && (
-            <p style={{ color: 'red', marginTop: '10px' }}>Error sending message. Please try again.</p>
-          )}
-        </form>
-      )}
-    </div>
-=======
-            <button 
-              type="submit" 
-              disabled={status === 'submitting'}
-              style={{ 
-                padding: '12px 30px', 
-                backgroundColor: status === 'submitting' ? '#ccc' : '#0f3460', 
-                color: 'white', 
-                border: 'none', 
-                borderRadius: '5px',
-                cursor: 'pointer',
-                width: '100%',
-                fontSize: '1rem'
-              }}
-            >
-              {status === 'submitting' ? 'Sending...' : 'Send Message'}
-            </button>
-            
-            {status === 'error' && (
-              <p style={{ color: 'red', marginTop: '10px' }}>Error sending message. Please try again.</p>
-            )}
-          </form>
-        )}
-      </div>
-    </>
->>>>>>> 6d035b70184908aaff21b118d39cf3f86063c40c
   );
 };
 
